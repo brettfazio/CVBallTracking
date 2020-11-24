@@ -1,1 +1,4 @@
 segmentation_out/
+data/
+__pycache__/
+runs/
