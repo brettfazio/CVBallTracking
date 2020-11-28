@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class ConvNet(nn.Module):
-    def __init__(self, mode):
+    def __init__(self):
         super(ConvNet, self).__init__()
 
         # Network architecture for the first part of question 1
@@ -28,37 +28,26 @@ class ConvNet(nn.Module):
         # Adjust size of input for image size
         self.fc_layer = nn.Sequential(
             nn.Dropout(p=0.1),
-            nn.Linear(4096, 1024),
+            nn.Linear(64 * 9, 1024),
             nn.ReLU(inplace=True),
-            nn.Linear(1024, 2),
-            nn.Softmax(),
+            nn.Linear(1024, 1),
+            nn.Sigmoid(),
             nn.Dropout(p=0.1),
         )
-
-        # This will select the forward pass function based on mode for the ConvNet.
-        # Based on the question, you have 5 modes available for step 1 to 5.
-        # During creation of each ConvNet model, you will assign one of the valid mode.
-        # This will fix the forward function (and the network graph) for the entire training/testing
-        if mode == 1:
-            self.forward = self.model_1
-        else: 
-            print("Invalid mode ", mode, "selected. Select between 1-5")
-            exit(0)
-        
         
     # 3 convolutional layers
-    def model_1(self, X):
+    def forward(self, X):
         # conv layers
         X = self.conv_layer(X)
-        print(X.shape)
+
         # flatten input
         X = X.view(X.size(0), -1)
         
         # fully connected layers
         X = self.fc_layer(X)
 
-        # No softmax because its already included in nn.CrossEntropyLoss()
         return X
+net = ConvNet()
 
     
     

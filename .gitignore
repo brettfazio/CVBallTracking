@@ -2,3 +2,5 @@ segmentation_out/
 data/
 __pycache__/
 runs/
+frames/
+__MACOSX/

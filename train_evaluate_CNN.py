@@ -9,6 +9,8 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from torch.utils.tensorboard import SummaryWriter
 from ConvNet import ConvNet 
+from dataprep import Dataset
+from torch.utils import data as D
 import argparse
 import numpy as np 
 
@@ -43,8 +45,9 @@ def train(model, device, train_loader, optimizer, criterion, epoch, batch_size):
     
     # Iterate over entire training samples (1 epoch)
     for batch_idx, batch_sample in enumerate(train_loader):
-        data, target = batch_sample
-        
+
+        data, target= batch_sample
+
         # Push data/label to correct device
         data, target = data.to(device), target.to(device)
         
@@ -99,7 +102,7 @@ def test(model, device, test_loader, criterion):
     # Set torch.no_grad() to disable gradient computation and backpropagation
     with torch.no_grad():
         for batch_idx, sample in enumerate(test_loader):
-            data, target = sample
+            data, target= sample
             data, target = data.to(device), target.to(device)
             
             # Predict for data by doing forward pass
@@ -146,34 +149,26 @@ def run_main(FLAGS):
     print("Torch device selected: ", device)
     
     # Initialize the model and send to device 
-    model = ConvNet(FLAGS.mode).to(device)
+    model = ConvNet().to(device)
 
     writer = SummaryWriter()
     
 
     # Define loss function.
-    criterion = nn.BCELoss()
+    criterion = nn.BCEWithLogitsLoss()
 
     # Define optimizer function.
     optimizer = optim.SGD(model.parameters(), FLAGS.learning_rate)
         
-    
-    # Create transformations to apply to each data sample 
-    # Can specify variations such as image flip, color flip, random crop, ...
-    transform=transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-        ])
+
     
     # Load datasets for training and testing
     # Inbuilt datasets available in torchvision (check documentation online)
-    dataset1 = datasets.CIFAR10('./data/', train=True, download=True,
-                       transform=transform)
+    dataset1 = Dataset("segmentation_out/color/train/")
+    dataset2 = Dataset("segmentation_out/color/test/")
 
-    dataset2 = datasets.CIFAR10('./data/', train=False,
-                       transform=transform)
     train_loader = DataLoader(dataset1, batch_size = FLAGS.batch_size, 
-                                shuffle=True, num_workers=4)
+                                shuffle=True, num_workers=0)
     test_loader = DataLoader(dataset2, batch_size = FLAGS.batch_size, 
                                 shuffle=False, num_workers=4)
     
@@ -199,6 +194,8 @@ def run_main(FLAGS):
     print("Training and evaluation finished")
 
     writer.flush()
+
+    torch.save(model.state_dict(), "model.pth")
     
     
 if __name__ == '__main__':
@@ -212,10 +209,10 @@ if __name__ == '__main__':
                         help='Initial learning rate.')
     parser.add_argument('--num_epochs',
                         type=int,
-                        default=30,
+                        default=3,
                         help='Number of epochs to run trainer.')
     parser.add_argument('--batch_size',
-                        type=int, default=10,
+                        type=int, default=1,
                         help='Batch size. Must divide evenly into the dataset sizes.')
     parser.add_argument('--log_dir',
                         type=str,
