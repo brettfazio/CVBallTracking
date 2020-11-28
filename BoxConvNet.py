@@ -35,16 +35,9 @@ class ConvNet(nn.Module):
         # Adjust size of input for image size
         self.fc_layer = nn.Sequential(
             nn.Dropout(p=0.1),
-<<<<<<< HEAD
-            nn.Linear(64 * 9, 1024),
-            nn.ReLU(inplace=True),
-            nn.Linear(1024, 1),
-            nn.Sigmoid(),
-=======
             nn.Linear(418048, 4096),
             nn.ReLU(inplace=True),
             nn.Linear(4096, 4),
->>>>>>> 465501c2ea443f20fac1e37665537726d836cb4c
             nn.Dropout(p=0.1),
         )
         
@@ -60,10 +53,3 @@ class ConvNet(nn.Module):
         X = self.fc_layer(X)
 
         return X
-<<<<<<< HEAD
-net = ConvNet()
-
-    
-    
-=======
->>>>>>> 465501c2ea443f20fac1e37665537726d836cb4c
