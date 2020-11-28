@@ -34,7 +34,7 @@ class Dataset (D.Dataset):
 
     def __getitem__(self, index):
         image = Image.open(self.filenames[index])
-        labels = np.genfromtxt('sample_data/labels.csv', delimiter=',')
+        labels = np.genfromtxt('sample_data/label2.csv', delimiter=',')
 
         if labels[index, 1] == 1:
             label = np.array([1.0])
