@@ -11,23 +11,17 @@ class ConvNet(nn.Module):
         # Comprised of 3 convolutional layers, utilizng dropout, batch normalization, and relu
         self.conv_layer = nn.Sequential(
 
-            nn.Conv2d(3, 8, kernel_size=9, padding=1),
-            nn.BatchNorm2d(8),
+            nn.Conv2d(3, 32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=9, stride=1),
-            nn.MaxPool2d(kernel_size=9, stride=1),
+            nn.MaxPool2d(kernel_size=2, stride=2),
 
-            nn.Conv2d(8, 16, kernel_size=9, padding=1),
-            nn.BatchNorm2d(16),
+            nn.Conv2d(32, 64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=9, stride=1),
-            nn.MaxPool2d(kernel_size=9, stride=1),
-
-            nn.Conv2d(16, 32, kernel_size=9, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=9, stride=1),
-
+            nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Dropout2d(p=0.1),
+
         )
 
 

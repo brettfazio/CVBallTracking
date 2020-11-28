@@ -165,7 +165,7 @@ def run_main(FLAGS):
     # Load datasets for training and testing
     # Inbuilt datasets available in torchvision (check documentation online)
     dataset1 = Dataset("segmentation_out/color/train/")
-    dataset2 = Dataset("segmentation_out/color/test/")
+    dataset2 = Dataset("segmentation_out/color/train/")
 
     train_loader = DataLoader(dataset1, batch_size = FLAGS.batch_size, 
                                 shuffle=True, num_workers=0)

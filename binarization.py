@@ -22,7 +22,8 @@ def get_high(mask):
       chigh = c
   return chigh
 
-vs = cv.VideoCapture('sample_data/-8FLF-osZmA.mp4')
+f = 'sample_data/-8FLF-osZmA.mp4'
+vs = cv.VideoCapture(f)
 
 backSub = cv.createBackgroundSubtractorMOG2()
 
@@ -46,7 +47,7 @@ while(True):
         cv.imwrite("segmentation_out/grey/b-{}.jpg".format(n), cut)
         cut_f = frame[ry : ry + rh, rx : rx + rw]
         cut_c = cv.bitwise_and(cut_f,cut_f,mask = cut)
-        cv.imwrite("segmentation_out/color/c-{}.jpg".format(n), cut_c)
+        cv.imwrite("segmentation_out/color/-8FLF-osZmA-c-{}.jpg".format(n), cut_c)
 
     print(n)
     n += 1
