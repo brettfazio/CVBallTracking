@@ -462,11 +462,11 @@ layer {
 }
 
 layer {
-    name: "concat1"
-    type: "Concat"
-    bottom: "pool15"
-    bottom: "pool25"
-    top: "poolConcat"
+	name: "concat1"
+	type: "Concat"
+	bottom: "pool15"
+	bottom: "pool25"
+	top: "poolConcat"
 }
 
 layer {
@@ -585,4 +585,3 @@ layer {
     shift: 0
   }
 }
-
