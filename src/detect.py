@@ -30,6 +30,8 @@ from matplotlib.ticker import NullLocator
 
 import numpy as np
 
+import cv2 as cv2
+
 """
 detect(image) returns [bounding boxes]
 
@@ -61,7 +63,7 @@ def detect(image):
     nms_threshold = 0.4
     batch_size = 1
     n_cpu = 0
-    image_size = 416
+    image_size =320 #416    
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -79,12 +81,18 @@ def detect(image):
 
     model.eval()  # Set in evaluation mode
 
-    #dataloader = DataLoader(
-    #    ImageFolder(image_folder, img_size=img_size),
-    #    batch_size=batch_size,
-    #    shuffle=False,
-    #    num_workers=n_cpu,
-    #)
+    image_folder = '../sample_data/folder'
+
+    dataloader = DataLoader(
+        ImageFolder(image_folder, img_size=image_size),
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=n_cpu,
+    )
+
+    #for batch_i, (path, inpu) in enumerate(dataloader):
+    #    print(inpu)
+    #    print(inpu.shape)
 
     classes = load_classes(class_path)  # Extracts class labels from file
 
@@ -118,7 +126,13 @@ def detect(image):
 
     """
 
+    image = cv2.resize(image, (320, 320))
+    image = np.array([image])
     image = torch.from_numpy(image)
+    image = image.reshape(1, 3, 320, 320)
+    
+    image = image.float()
+    image = Variable(image)
 
     # Array of bounding boxes of balls to return
     boxes = np.array([])
@@ -128,9 +142,19 @@ def detect(image):
         detections = model(image)
         detections = non_max_suppression(detections, conf_threshold, nms_threshold)
 
-    for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
-        if classes[int(cls_pred)] == 'Sports Ball':
-            boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1])
+    #detections = rescale_boxes(detections, image_size, image.shape[:2])
+
+    images = []
+    iter_detections =[]
+
+    images.extend(image)
+    iter_detections.extend(detections)
+
+    for imgi, (path, detections) in enumerate(zip(images,iter_detections)):
+        for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
+            if classes[int(cls_pred)] == 'Sports Ball':
+                print('yo')
+                boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1])
 
     return boxes
 
