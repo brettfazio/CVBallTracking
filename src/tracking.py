@@ -4,14 +4,14 @@ import sys
 
 """
    Outputs video of tracked object given:
-    video: name of the video file
+    file: name of the video file
     tracker_type: tracking method to be used
     bbox: an initial bbox [top left corner, height, width]
-    frame: frame to start tracking
+    start: frame to start tracking
    Returns map of frame to bbox tracked in that frame
 """
 
-def opencv_track(video, tracker_type, bbox):
+def opencv_track(file, tracker_type, start, bbox):
     if tracker_type == 'BOOSTING':
         tracker = cv2.TrackerBoosting_create()
     if tracker_type == 'MIL':
@@ -30,16 +30,40 @@ def opencv_track(video, tracker_type, bbox):
         tracker = cv2.TrackerCSRT_create()
     print("Using {} tracking", tracker_type)
 
-    # Initialize tracker with first frame and bounding box
+    # Read video
+    video = cv2.VideoCapture(file)
+
+    # Exit if video not opened.
+    if not video.isOpened():
+        print ("Could not open video")
+        sys.exit()
+ 
+    # Read first frame.
+    ok, frame = video.read()
+    if not ok:
+        print ('Cannot read video file')
+        sys.exit()
+
+    # Start at specified frame
+    video.set(cv2.CV_CAP_PROP_POS_FRAMES, start)
+    current_frame = start
+
+    # Initialize tracker with starting frame and bounding box
     ok = tracker.init(frame, bbox)
 
+    # Initialize video output
     result = cv2.VideoWriter(f"{video}-out.mp4",  
                          cv2.VideoWriter_fourcc(*'MJPG'), 
                          30, size) 
+    
+    # Initialize bbox output
+    ret = {}
 
+    # Go through each frame
     while True:
         # Read a new frame
         ok, frame = video.read()
+
         if not ok:
             break
          
@@ -48,7 +72,10 @@ def opencv_track(video, tracker_type, bbox):
  
         # Update tracker
         ok, bbox = tracker.update(frame)
- 
+
+        # Update bbox output
+        ret[current_frame] = bbox
+
         # Calculate Frames per second (FPS)
         fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
  
@@ -72,11 +99,13 @@ def opencv_track(video, tracker_type, bbox):
         result.write(frame)
         cv2.imshow("Tracking", frame)
 
-        # When everything done, release  
-        # the video capture and video  
-        # write objects 
-        video.release() 
-        result.release() 
+    # When everything done, release  
+    # the video capture and video  
+    # write objects 
+    video.release() 
+    result.release() 
 
-        # Closes all the frames 
-        cv2.destroyAllWindows() 
+    # Closes all the frames 
+    cv2.destroyAllWindows()
+
+    return ret 
