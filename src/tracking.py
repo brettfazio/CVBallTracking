@@ -52,7 +52,7 @@ def opencv_track(file, tracker_type, start, bbox):
     ok = tracker.init(frame, bbox)
 
     # Initialize video output
-    result = cv2.VideoWriter(f"{video}-out.mp4",  
+    result = cv2.VideoWriter(f"{video}-{tracker_type}-out.mp4",  
                          cv2.VideoWriter_fourcc(*'MJPG'), 
                          30, size) 
     
@@ -75,9 +75,6 @@ def opencv_track(file, tracker_type, start, bbox):
 
         # Update bbox output
         ret[current_frame] = bbox
-
-        # Calculate Frames per second (FPS)
-        fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
  
         # Draw bounding box
         if ok:
@@ -85,19 +82,10 @@ def opencv_track(file, tracker_type, start, bbox):
             p1 = (int(bbox[0]), int(bbox[1]))
             p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
             cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
-        else :
-            # Tracking failure
-            cv2.putText(frame, "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
- 
-        # Display tracker type on frame
-        cv2.putText(frame, tracker_type + " Tracker", (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50),2)
-     
-        # Display FPS on frame
-        cv2.putText(frame, "FPS : " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
  
         # Display result, write to vid
         result.write(frame)
-        cv2.imshow("Tracking", frame)
+        cv2.imshow(f"{tracker_type} Tracking", frame)
 
     # When everything done, release  
     # the video capture and video  
