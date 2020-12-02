@@ -37,7 +37,7 @@ Detect takes in an image and returns the bounding boxes of all balls in the imag
 
 """
 
-def detect(image_pathi):
+def detect(image):
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_folder", type=str, default="data/samples", help="path to dataset")
@@ -117,6 +117,9 @@ def detect(image_pathi):
         #img_detections.extend(detections)
 
     """
+
+    image = torch.from_numpy(image)
+
     # Array of bounding boxes of balls to return
     boxes = np.array([])
 
