@@ -28,6 +28,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
 
+import numpy as np
+
 """
 detect(image) returns [bounding boxes]
 
@@ -114,6 +116,8 @@ def detect(image_pathi):
         img_detections.extend(detections)
 
 
+    # Array of bounding boxes of balls to return
+    boxes = np.array([])
 
     # Bounding-box colors
     cmap = plt.get_cmap("tab20b")
@@ -142,6 +146,11 @@ def detect(image_pathi):
 
                 print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
 
+                # See if this is a ball
+                if classes[int(cls_pred)] == 'Sports Ball':
+                    # If so, append to our list of (x,y,w,h) bounding boxes to return
+                    boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1]
+
                 box_w = x2 - x1
                 box_h = y2 - y1
 
@@ -167,4 +176,6 @@ def detect(image_pathi):
         filename = path.split("/")[-1].split(".")[0]
         plt.savefig(f"output/{filename}.png", bbox_inches="tight", pad_inches=0.0)
         plt.close()
+        
+    return boxes
 
