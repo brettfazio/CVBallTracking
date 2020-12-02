@@ -79,12 +79,12 @@ def detect(image_pathi):
 
     model.eval()  # Set in evaluation mode
 
-    dataloader = DataLoader(
-        ImageFolder(image_folder, img_size=img_size),
-        batch_size=batch_size,
-        shuffle=False,
-        num_workers=n_cpu,
-    )
+    #dataloader = DataLoader(
+    #    ImageFolder(image_folder, img_size=img_size),
+    #    batch_size=batch_size,
+    #    shuffle=False,
+    #    num_workers=n_cpu,
+    #)
 
     classes = load_classes(class_path)  # Extracts class labels from file
 
@@ -93,7 +93,7 @@ def detect(image_pathi):
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
 
-    print("\nPerforming object detection:")
+    #print("\nPerforming object detection:")
     prev_time = time.time()
     # Should only run once (one image in the DataLoader)
     for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
@@ -106,19 +106,31 @@ def detect(image_pathi):
             detections = non_max_suppression(detections, conf_thres, nms_thres)
 
         # Log progress
-        current_time = time.time()
-        inference_time = datetime.timedelta(seconds=current_time - prev_time)
-        prev_time = current_time
+        #current_time = time.time()
+        #inference_time = datetime.timedelta(seconds=current_time - prev_time)
+        #prev_time = current_time
         print("\t+ Batch %d, Inference Time: %s" % (batch_i, inference_time))
 
         # Save image and detections
-        imgs.extend(img_paths)
-        img_detections.extend(detections)
+        #imgs.extend(img_paths)
+        #img_detections.extend(detections)
 
 
     # Array of bounding boxes of balls to return
     boxes = np.array([])
 
+    # run on the image
+    with torch.no_grad():
+        detections = model(image)
+        detections = non_max_suppression(detections, conf_threshold, nms_threshold)
+
+    for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
+        if classes[int(cls_pred)] == 'Sports Ball':
+            boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1])
+
+    return boxes
+
+    """
     # Bounding-box colors
     cmap = plt.get_cmap("tab20b")
     colors = [cmap(i) for i in np.linspace(0, 1, 20)]
@@ -178,4 +190,4 @@ def detect(image_pathi):
         plt.close()
         
     return boxes
-
+    """
