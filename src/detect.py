@@ -1,3 +1,12 @@
+"""
+
+The following is using the model and some code basis from https://github.com/eriklindernoren/PyTorch-YOLOv3
+
+It is a modification of his code to read in and use the pre-trained YOLOv3 model, modified to do video tracking.
+
+"""
+
+
 from yolo.models import *
 from yolo.utils.utils import *
 from yolo.utils.datasets import *
@@ -22,7 +31,7 @@ from matplotlib.ticker import NullLocator
 """
 detect(image) returns [bounding boxes]
 
-Detect takes in am image and returns the bounding boxes of all balls in the image
+Detect takes in an image and returns the bounding boxes of all balls in the image
 
 """
 
@@ -103,6 +112,8 @@ def detect(image_pathi):
         # Save image and detections
         imgs.extend(img_paths)
         img_detections.extend(detections)
+
+
 
     # Bounding-box colors
     cmap = plt.get_cmap("tab20b")
