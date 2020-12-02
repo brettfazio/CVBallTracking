@@ -149,7 +149,7 @@ def detect(image_pathi):
                 # See if this is a ball
                 if classes[int(cls_pred)] == 'Sports Ball':
                     # If so, append to our list of (x,y,w,h) bounding boxes to return
-                    boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1]
+                    boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1])
 
                 box_w = x2 - x1
                 box_h = y2 - y1
