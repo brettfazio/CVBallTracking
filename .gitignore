@@ -8,3 +8,5 @@ goturn.caffemodel
 darknet53.conv.74
 .DS_Store
 */.DS_Store
+src/output/*
+
