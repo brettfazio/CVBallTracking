@@ -68,7 +68,7 @@ def detect(image_pathi):
     os.makedirs("output", exist_ok=True)
 
     # Set up model
-    model = Darknet(model_def, img_size=img_size).to(device)
+    model = Darknet(model_def, img_size=image_size).to(device)
 
     if weights_path.endswith(".weights"):
         # Load darknet weights
@@ -93,6 +93,7 @@ def detect(image_pathi):
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
 
+    """
     #print("\nPerforming object detection:")
     prev_time = time.time()
     # Should only run once (one image in the DataLoader)
@@ -115,7 +116,7 @@ def detect(image_pathi):
         #imgs.extend(img_paths)
         #img_detections.extend(detections)
 
-
+    """
     # Array of bounding boxes of balls to return
     boxes = np.array([])
 
