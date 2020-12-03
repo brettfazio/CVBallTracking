@@ -14,17 +14,27 @@ from tracking import opencv_track
 from detect import detect
 
 def yolo_track(video):
-    ok, frame = video.read()
+    
+    while video.isOpened():
+        ok, frame = video.read()
 
-    if not ok:
-        print('Cannot read video file')
-        sys.exit()
+        if not ok:
+            break
+
+        bbox = detect(frame)
+
+    
 
 def track(video):
-    ok, frame = video.read()
+    
+    while video.isOpened():
+        ok, frame = video.read()
 
-    if not ok:
-        print('Cannot read video file')
+        if not ok:
+            break
+
+        bbox = detect(frame)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
