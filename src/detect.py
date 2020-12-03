@@ -83,7 +83,7 @@ def detect(image):
     model.eval()  # Set in evaluation mode
 
     # Resize the image
-    image = cv2.resize(image, (image_size, image_size))
+    #image = cv2.resize(image, (image_size, image_size))
 
     # Write the image to a temporary file to put into the dataloader
     path = Path(__file__).parent.absolute()
@@ -130,14 +130,6 @@ def detect(image):
         #img_detections.extend(detections)
     """
 
-    
-    image = np.array([image])
-    image = torch.from_numpy(image)
-    image = image.reshape(1, 3, image_size, image_size)
-    
-    image = image.float()
-    image = Variable(image)
-
     # Array of bounding boxes of balls to return
     boxes = np.array([])
 
@@ -158,8 +150,20 @@ def detect(image):
 
     for imgi, (path, detections) in enumerate(zip(images,iter_detections)):
         for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
+            image = np.array(Image.open(path))
+            detections = rescale_boxes(detections, image_size, image.shape[:2])
             if classes[int(cls_pred)] == 'sports ball':
                 boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1])
+                
+                #fig, ax = plt.subplots(1)
+                #ax.imshow(image)
+
+                #box_w = x2-x1
+                #box_h = y2-y1
+
+                #bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor="none")
+                #ax.add_patch(bbox)
+                #plt.show()
 
     return boxes
 
