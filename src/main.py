@@ -26,7 +26,9 @@ def yolo_track(video):
     
 
 def track(video):
-    
+
+    bounding = np.array([])
+
     while video.isOpened():
         ok, frame = video.read()
 
@@ -34,7 +36,13 @@ def track(video):
             break
 
         bbox = detect(frame)
+        
+        # For now just use the first bounding box found
+        if len(bbox) > 0:
+            boudning = bbox[0]
+            break
 
+   # Now that we have the bounding box of the ball we can run opencv_track
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
