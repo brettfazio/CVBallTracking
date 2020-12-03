@@ -15,7 +15,11 @@ from detect import detect
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    # Specify video source
     parser.add_argument("--video", type=str, default="video.mp4", help="video to track")
+    # Specify mode (either yolo or track). yolo runs localization on every frame
+    # track just tracks it after it finds the initial box.
+    parser.add_argument("--mode", type=str, default="track", help='yolo or track')
 
     opt = parser.parse_args()
     print(opt.video)
@@ -28,4 +32,5 @@ if __name__ == "__main__":
         print ('Cannot read video file')
         sys.exit()
 
+    
     bboxes = detect(frame)
