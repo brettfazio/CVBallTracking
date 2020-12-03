@@ -38,33 +38,43 @@ def opencv_track(file, tracker_type, start, bbox):
         print ("Could not open video")
         sys.exit()
  
-    # Read first frame.
-    ok, frame = video.read()
-    if not ok:
-        print ('Cannot read video file')
-        sys.exit()
-
-    # Start at specified frame
-    video.set(cv2.CV_CAP_PROP_POS_FRAMES, start)
-    current_frame = start
-
-    # Initialize tracker with starting frame and bounding box
-    ok = tracker.init(frame, bbox)
+    # Get video dimensions
+    frame_width = int(video.get(3)) 
+    frame_height = int(video.get(4)) 
+   
+    size = (frame_width, frame_height) 
 
     # Initialize video output
-    result = cv2.VideoWriter(f"{video}-{tracker_type}-out.mp4",  
-                         cv2.VideoWriter_fourcc(*'MJPG'), 
+    result = cv2.VideoWriter(f"{file}-{tracker_type}-out.avi",  
+                         cv2.VideoWriter_fourcc(*'XVID'), 
                          30, size) 
     
     # Initialize bbox output
     ret = {}
 
+    # Reshape bbox input
+    bbox = (bbox[0], bbox[1], bbox[2], bbox[3])
+
     # Go through each frame
+    current_frame = 0
     while True:
+        
         # Read a new frame
         ok, frame = video.read()
 
         if not ok:
+            break
+        
+        if current_frame < start:
+            current_frame += 1
+            continue
+
+        if current_frame == start:
+            # Initialize tracker with starting frame and bounding box
+            ok = tracker.init(frame, bbox)
+
+        if not ok:
+            print ('failed to init tracker')
             break
          
         # Start timer
@@ -86,6 +96,7 @@ def opencv_track(file, tracker_type, start, bbox):
         # Display result, write to vid
         result.write(frame)
         cv2.imshow(f"{tracker_type} Tracking", frame)
+        current_frame += 1
 
     # When everything done, release  
     # the video capture and video  

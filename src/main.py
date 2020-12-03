@@ -46,10 +46,11 @@ def track(video_path):
 
         # For now just use the first bounding box found
         if len(bbox) > 0:
-            bounding = bbox[0]
+            bounding = bbox
             break
 
         index += 1
+    video.release() 
     # Now that we have the bounding box of the ball we can run opencv_track
     opencv_track(video_path, 'CSRT', index, bounding)
 
