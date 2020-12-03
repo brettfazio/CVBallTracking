@@ -149,9 +149,9 @@ def detect(image):
 
 
     for imgi, (path, detections) in enumerate(zip(images,iter_detections)):
+        detections = rescale_boxes(detections, image_size, image.shape[:2])
         for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
             image = np.array(Image.open(path))
-            detections = rescale_boxes(detections, image_size, image.shape[:2])
             if classes[int(cls_pred)] == 'sports ball':
                 boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1])
                 
