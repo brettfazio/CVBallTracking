@@ -158,7 +158,7 @@ def detect(image):
 
     for imgi, (path, detections) in enumerate(zip(images,iter_detections)):
         for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
-            if classes[int(cls_pred)] == 'Sports Ball':
+            if classes[int(cls_pred)] == 'sports ball':
                 boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1])
 
     return boxes

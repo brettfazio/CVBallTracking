@@ -9,6 +9,7 @@ python main.py --video ../sample_data/1LdhIsz6INQ.mp4
 import argparse
 import cv2 as cv
 import sys
+import numpy as np
 
 from tracking import opencv_track
 from detect import detect
@@ -36,12 +37,13 @@ def track(video_path):
 
     while video.isOpened():
         ok, frame = video.read()
-
         if not ok:
             break
 
         bbox = detect(frame)
-        
+       
+        print(bbox)
+
         # For now just use the first bounding box found
         if len(bbox) > 0:
             bounding = bbox[0]
