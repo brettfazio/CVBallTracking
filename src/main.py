@@ -13,8 +13,10 @@ import sys
 from tracking import opencv_track
 from detect import detect
 
-def yolo_track(video):
+def yolo_track(video_path):
     
+    video = cv.VideoCapture(video_path)
+
     while video.isOpened():
         ok, frame = video.read()
 
@@ -25,9 +27,12 @@ def yolo_track(video):
 
     
 
-def track(video):
+def track(video_path):
+
+    video = cv.VideoCapture(video_path)
 
     bounding = np.array([])
+    index = 0
 
     while video.isOpened():
         ok, frame = video.read()
@@ -39,10 +44,12 @@ def track(video):
         
         # For now just use the first bounding box found
         if len(bbox) > 0:
-            boudning = bbox[0]
+            bounding = bbox[0]
             break
 
-   # Now that we have the bounding box of the ball we can run opencv_track
+        index += 1
+    # Now that we have the bounding box of the ball we can run opencv_track
+    opencv_track(video_path, 'CSRT', index, bounding)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -59,6 +66,6 @@ if __name__ == "__main__":
     video = cv.VideoCapture(opt.video)
 
     if opt.mode == 'track':
-        track(video)
+        track(opt.video)
     else:
-        yolo_track(video)
+        yolo_track(opt.video)
