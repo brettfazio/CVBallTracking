@@ -16,6 +16,7 @@ import sys
 import time
 import datetime
 import argparse
+from pathlib import Path
 
 from PIL import Image
 
@@ -63,7 +64,7 @@ def detect(image):
     nms_threshold = 0.4
     batch_size = 1
     n_cpu = 0
-    image_size =320 #416    
+    image_size = 416 #320 #416    
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -81,7 +82,15 @@ def detect(image):
 
     model.eval()  # Set in evaluation mode
 
-    image_folder = '../sample_data/folder'
+    # Resize the image
+    image = cv2.resize(image, (image_size, image_size))
+
+    # Write the image to a temporary file to put into the dataloader
+    path = Path(__file__).parent.absolute()
+    path = os.path.join(path, 'temp')
+    cv2.imwrite(os.path.join(path, 'in.jpg'), image)
+
+    image_folder = 'temp'
 
     dataloader = DataLoader(
         ImageFolder(image_folder, img_size=image_size),
@@ -89,10 +98,6 @@ def detect(image):
         shuffle=False,
         num_workers=n_cpu,
     )
-
-    #for batch_i, (path, inpu) in enumerate(dataloader):
-    #    print(inpu)
-    #    print(inpu.shape)
 
     classes = load_classes(class_path)  # Extracts class labels from file
 
@@ -123,13 +128,12 @@ def detect(image):
         # Save image and detections
         #imgs.extend(img_paths)
         #img_detections.extend(detections)
-
     """
 
-    image = cv2.resize(image, (320, 320))
+    
     image = np.array([image])
     image = torch.from_numpy(image)
-    image = image.reshape(1, 3, 320, 320)
+    image = image.reshape(1, 3, image_size, image_size)
     
     image = image.float()
     image = Variable(image)
@@ -137,23 +141,24 @@ def detect(image):
     # Array of bounding boxes of balls to return
     boxes = np.array([])
 
-    # run on the image
-    with torch.no_grad():
-        detections = model(image)
-        detections = non_max_suppression(detections, conf_threshold, nms_threshold)
-
-    #detections = rescale_boxes(detections, image_size, image.shape[:2])
-
     images = []
     iter_detections =[]
 
-    images.extend(image)
-    iter_detections.extend(detections)
+    # Go through dataloader
+    for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
+        input_imgs = Variable(input_imgs.type(Tensor))
+
+        with torch.no_grad():
+            detections = model(input_imgs)
+            detections = non_max_suppression(detections, conf_threshold, nms_threshold)
+
+        images.extend(img_paths)
+        iter_detections.extend(detections)
+
 
     for imgi, (path, detections) in enumerate(zip(images,iter_detections)):
         for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
             if classes[int(cls_pred)] == 'Sports Ball':
-                print('yo')
                 boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1])
 
     return boxes
@@ -165,12 +170,13 @@ def detect(image):
 
     print("\nSaving images:")
     # Iterate through images and save plot of detections
-    for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
+    for img_i, (path, detections) in enumerate(zip(images,iter_detections)):#in enumerate(zip(imgs, img_detections)):
 
         print("(%d) Image: '%s'" % (img_i, path))
 
         # Create plot
-        img = np.array(Image.open(path))
+        print(path)
+        img = img_i#np.array(Image.open(path))
         plt.figure()
         fig, ax = plt.subplots(1)
         ax.imshow(img)
