@@ -52,8 +52,12 @@ def opencv_track(file, tracker_type, start, bbox):
     # Initialize bbox output
     ret = {}
 
+    # Hyper parameter - give extra space to the bounding box
+    # this helps when the ball bounces off screen, goes through a net, or is behind a player's hand.
+    extra_size = 10
+
     # Reshape bbox input
-    bbox = (bbox[0]-10, bbox[1]-10, bbox[2]+20, bbox[3]+20)
+    bbox = (bbox[0]-extra_size, bbox[1]-extra_size, bbox[2]+extra_size*2, bbox[3]+extra_size*2)
 
     # Go through each frame
     current_frame = 0
