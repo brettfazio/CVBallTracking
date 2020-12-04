@@ -54,7 +54,8 @@ def opencv_track(file, tracker_type, start, bbox):
 
     # Hyper parameter - give extra space to the bounding box
     # this helps when the ball bounces off screen, goes through a net, or is behind a player's hand.
-    extra_size = 8
+    # lebron 8
+    extra_size = 2
 
     # Reshape bbox input
     bbox = (bbox[0]-extra_size, bbox[1]-extra_size, bbox[2]+extra_size*2, bbox[3]+extra_size*2)
