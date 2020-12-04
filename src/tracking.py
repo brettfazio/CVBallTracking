@@ -1,6 +1,7 @@
 import cv2
 import sys
 
+from detect import detect
 
 """
    Outputs video of tracked object given:
@@ -123,4 +124,20 @@ opencv based tracker.
 
 """
 def overlap_track(file, start, bbox):
+    # Read Video
+    video = cv2.VideoCapture(file)
+
+    # Confirm video can be opened
+    if not video.isOpened():
+        print('video could not be opened')
+        sys.exit()
+
+    while video.isOpened():
+        ok, frame = video.read()
+
+        if not ok:
+            break
+
+        new_bboxes = detect(frame)
+
     return

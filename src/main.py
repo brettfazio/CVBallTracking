@@ -42,8 +42,6 @@ def track(video_path):
 
         bbox = detect(frame)
        
-        print(bbox)
-
         # For now just use the first bounding box found
         if len(bbox) > 0:
             bounding = bbox
