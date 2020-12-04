@@ -53,7 +53,7 @@ def opencv_track(file, tracker_type, start, bbox):
     ret = {}
 
     # Reshape bbox input
-    bbox = (bbox[0], bbox[1], bbox[2], bbox[3])
+    bbox = (bbox[0]-10, bbox[1]-10, bbox[2]+20, bbox[3]+20)
 
     # Go through each frame
     current_frame = 0
@@ -66,6 +66,7 @@ def opencv_track(file, tracker_type, start, bbox):
             break
         
         if current_frame < start:
+            result.write(frame)
             current_frame += 1
             continue
 
@@ -95,7 +96,6 @@ def opencv_track(file, tracker_type, start, bbox):
  
         # Display result, write to vid
         result.write(frame)
-        cv2.imshow(f"{tracker_type} Tracking", frame)
         current_frame += 1
 
     # When everything done, release  
