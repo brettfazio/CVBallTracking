@@ -141,4 +141,13 @@ def overlap_track(file, start, bbox):
 
         new_bboxes = detect(frame)
 
+        # If there are no bounding boxes found on this frame, we will have to skip and try re-detecting a ball
+
+        # Go through the bounding boxes to find the one with highest IOU score.
+
+
+        # Set the highest score as the new bounding box        
+        
+
+    # Return a map of bbox locations
     return
