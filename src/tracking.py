@@ -111,4 +111,16 @@ def opencv_track(file, tracker_type, start, bbox):
     # Closes all the frames 
     cv2.destroyAllWindows()
 
-    return ret 
+    return ret
+
+"""
+
+Given a video file, as well as the frame from which to start and an initial bounding box,
+this will use overlap based tracking to track the ball throughout the rest of the video.
+
+Since this will be running localization on every frame it will not be as performant as the above
+opencv based tracker.
+
+"""
+def overlap_track(file, start, bbox):
+    return
