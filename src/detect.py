@@ -88,7 +88,7 @@ def detect(image):
     img_detections = []  # Stores detections for each image index
 
     # Array of bounding boxes of balls to return
-    boxes = np.array([])
+    boxes = []
 
     images = []
     iter_detections =[]
@@ -110,6 +110,6 @@ def detect(image):
         for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
             image = np.array(Image.open(path))
             if classes[int(cls_pred)] == 'sports ball':
-                boxes = np.append(boxes, [x1, y1, x2-x1, y2-y1])
+                boxes.append([x1, y1, x2-x1, y2-y1])
                 
     return boxes

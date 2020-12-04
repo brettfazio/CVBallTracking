@@ -41,10 +41,10 @@ def track(video_path):
             break
 
         bbox = detect(frame)
-       
+
         # For now just use the first bounding box found
         if len(bbox) > 0:
-            bounding = bbox
+            bounding = bbox[0]
             break
 
         index += 1
