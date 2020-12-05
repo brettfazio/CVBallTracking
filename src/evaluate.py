@@ -40,7 +40,7 @@ def yolo_based_eval(video_file, mapped_predictions):
 
         # Otherwise use the highest overlap box
         
-        frame_index
+        frame_index += 1
 
     # Return evaluation data
     return
