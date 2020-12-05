@@ -11,12 +11,12 @@ import cv2 as cv
 import sys
 import numpy as np
 
-from tracking import opencv_track
+from tracking import opencv_track, overlap_track
 from detect import detect
 
 def yolo_track(video_path):
-    
-    video = cv.VideoCapture(video_path)
+    overlap_track(video_path)
+    """video = cv.VideoCapture(video_path)
 
     while video.isOpened():
         ok, frame = video.read()
@@ -24,7 +24,7 @@ def yolo_track(video_path):
         if not ok:
             break
 
-        bbox = detect(frame)
+        bbox = detect(frame)"""
 
     
 

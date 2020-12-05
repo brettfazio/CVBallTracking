@@ -29,7 +29,7 @@ def opencv_track(file, tracker_type, start, bbox):
         tracker = cv2.TrackerMOSSE_create()
     if tracker_type == "CSRT":
         tracker = cv2.TrackerCSRT_create()
-    print("Using {} tracking", tracker_type)
+    print(f"Using {tracker_type} tracking")
 
     # Read video
     video = cv2.VideoCapture(file)
@@ -56,7 +56,7 @@ def opencv_track(file, tracker_type, start, bbox):
     # Hyper parameter - give extra space to the bounding box
     # this helps when the ball bounces off screen, goes through a net, or is behind a player's hand.
     # lebron 8
-    extra_size = 2
+    extra_size = 8
 
     # Reshape bbox input
     bbox = (bbox[0]-extra_size, bbox[1]-extra_size, bbox[2]+extra_size*2, bbox[3]+extra_size*2)
@@ -124,30 +124,69 @@ Since this will be running localization on every frame it will not be as perform
 opencv based tracker.
 
 """
-def overlap_track(file, start, bbox):
-    # Read Video
+def overlap_track(file):
+
+    # Read video
     video = cv2.VideoCapture(file)
 
-    # Confirm video can be opened
+    # Exit if video not opened.
     if not video.isOpened():
-        print('video could not be opened')
+        print ("Could not open video")
         sys.exit()
+    
+    # Get video dimensions
+    frame_width = int(video.get(3)) 
+    frame_height = int(video.get(4)) 
+   
+    size = (frame_width, frame_height) 
 
-    while video.isOpened():
-        ok, frame = video.read()
+    # Initialize video output
+    result = cv2.VideoWriter(f"{file}-overlap-out.avi",  
+                         cv2.VideoWriter_fourcc(*'XVID'), 
+                         30, size)
 
-        if not ok:
-            break
+     # Initialize bbox output
+    ret = {}
 
-        new_bboxes = detect(frame)
-
-        # If there are no bounding boxes found on this frame, we will have to skip and try re-detecting a ball
-
-        # Go through the bounding boxes to find the one with highest IOU score.
-
-
-        # Set the highest score as the new bounding box        
+    # Go through each frame
+    current_frame = 0
+    while True:
         
+        # Read a new frame
+        ok, frame = video.read()
+        print(current_frame)
+         
+        # Start timer
+        timer = cv2.getTickCount()
+ 
+        # Update tracker
+        if ok:
+            bbox = detect(frame)
+        else:
+            break
+        # Update bbox output
+        ret[current_frame] = bbox
+ 
+        # Draw bounding box
+        if bbox:
+            bbox = bbox[0]
+            # Tracking success
+            bbox = (bbox[0], bbox[1], bbox[2], bbox[3])
+            p1 = (int(bbox[0]), int(bbox[1]))
+            p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
+            cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+ 
+        # Display result, write to vid
+        result.write(frame)
+        current_frame += 1
 
-    # Return a map of bbox locations
-    return
+    # When everything done, release  
+    # the video capture and video  
+    # write objects 
+    video.release() 
+    result.release() 
+
+    # Closes all the frames 
+    cv2.destroyAllWindows()
+
+    return ret
