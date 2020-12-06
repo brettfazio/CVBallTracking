@@ -1,6 +1,7 @@
 import numpy as np
 
 from detect import detect
+from util import compute_iou
 
 """
 The following will run YOLO on every frame of the video to use it as a source 
@@ -18,9 +19,10 @@ def yolo_based_eval(video_file, mapped_predictions):
         sys.exit()
 
     # Go through frames of the video
-    frame_index = 0
+    frame_index = -1
 
     while video.isOpened():
+        frame_index += 1
         ok, frame = video.read()
 
         if not ok:
@@ -30,17 +32,29 @@ def yolo_based_eval(video_file, mapped_predictions):
         # if we don't report this as a missed frame (assuming YOLO finds something)
         # If we do have a prediction for this frame, just proceed as normal
 
-        # Get the YOLO sot
+        # Get the YOLO set
 
         new_bboxes = detect(frame)
         
-        # Find the BBox with the highest IOU score, that is the one we wish to compare against
+        if len(new_bboxes) == 0:
+            # no detected balls to compare against. Cannot make any assumptions here.
+            continue
 
-        # If no boxes overlap, report that
+        highest = 0
+
+        # Find the BBox with the highest IOU score, that is the one we wish to compare against
+        for bbox in new_bboxes:
+            predicted_bbox = mapped_predictions[frame_index]
+
+            iou_score = compute_iou(predicted_bbox, bbox)
+            highest = max(highest, iou_score)
+
+        # If no boxes overlap, report that        
+        if highest == 0:
+            continue
 
         # Otherwise use the highest overlap box
         
-        frame_index += 1
 
     # Return evaluation data
     return
