@@ -2,6 +2,7 @@ import cv2
 import sys
 
 from detect import detect
+from utility import get_tracker
 
 """
    Outputs video of tracked object given:
@@ -13,22 +14,7 @@ from detect import detect
 """
 
 def opencv_track(file, tracker_type, start, bbox):
-    if tracker_type == 'BOOSTING':
-        tracker = cv2.TrackerBoosting_create()
-    if tracker_type == 'MIL':
-        tracker = cv2.TrackerMIL_create()
-    if tracker_type == 'KCF':
-        tracker = cv2.TrackerKCF_create()
-    if tracker_type == 'TLD':
-        tracker = cv2.TrackerTLD_create()
-    if tracker_type == 'MEDIANFLOW':
-        tracker = cv2.TrackerMedianFlow_create()
-    if tracker_type == 'GOTURN':
-        tracker = cv2.TrackerGOTURN_create()
-    if tracker_type == 'MOSSE':
-        tracker = cv2.TrackerMOSSE_create()
-    if tracker_type == "CSRT":
-        tracker = cv2.TrackerCSRT_create()
+    tracker = get_tracker(tracker_type)
     print(f"Using {tracker_type} tracking")
 
     # Read video
@@ -106,9 +92,9 @@ def opencv_track(file, tracker_type, start, bbox):
 
     if backwards_frames:
         backwards = backwards_track(backwards_frames, tracker_type, initial_bbox)
-
-    for frame in backwards[0]:
-        result.write(frame)
+        for frame in backwards[0]:
+            result.write(frame)
+    
 
     for frame in forwards_frames:
         result.write(frame)
@@ -125,22 +111,7 @@ def opencv_track(file, tracker_type, start, bbox):
     return ret
 
 def backwards_track(frames, tracker_type, bbox):
-    if tracker_type == 'BOOSTING':
-        tracker = cv2.TrackerBoosting_create()
-    if tracker_type == 'MIL':
-        tracker = cv2.TrackerMIL_create()
-    if tracker_type == 'KCF':
-        tracker = cv2.TrackerKCF_create()
-    if tracker_type == 'TLD':
-        tracker = cv2.TrackerTLD_create()
-    if tracker_type == 'MEDIANFLOW':
-        tracker = cv2.TrackerMedianFlow_create()
-    if tracker_type == 'GOTURN':
-        tracker = cv2.TrackerGOTURN_create()
-    if tracker_type == 'MOSSE':
-        tracker = cv2.TrackerMOSSE_create()
-    if tracker_type == "CSRT":
-        tracker = cv2.TrackerCSRT_create()
+    tracker = get_tracker(tracker_type)
 
     bbox_results = {}
     frame_results = list()
