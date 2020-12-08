@@ -13,9 +13,12 @@ import numpy as np
 
 from tracking import opencv_track, overlap_track
 from detect import detect
+from evaluate import yolo_based_eval
 
 def yolo_track(video_path):
     mapped_results = overlap_track(video_path)
+    
+    return mapped_results
 
 def track(video_path):
 
@@ -41,6 +44,8 @@ def track(video_path):
     # Now that we have the bounding box of the ball we can run opencv_track
     mapped_results = opencv_track(video_path, 'CSRT', index, bounding)
 
+   return mapped_results
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # Specify video source
@@ -56,7 +61,13 @@ if __name__ == "__main__":
 
     video = cv.VideoCapture(opt.video)
 
+    # Perform specified tracking/localization mode
     if opt.mode == 'track':
-        track(opt.video)
+        mapped_results = track(opt.video)
     else:
-        yolo_track(opt.video)
+        mapped_results = yolo_track(opt.video)
+
+    # Evaluate using specified method
+    if opt.mode == 'yolo':
+        avg_iou = yolo_based_eval(opt.video, mapped_results)
+        print('YOLO-Based Average IOU computed as: ', avg_iou)
