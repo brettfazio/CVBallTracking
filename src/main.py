@@ -54,7 +54,7 @@ def track(video_path, fast, live):
 
     return mapped_results
 
-def run_a2d(amt):
+def run_a2d(amt, verbose):
     df = get_a2d_df()
 
     # Iterate over all videos in a2d
@@ -86,8 +86,14 @@ def run_a2d(amt):
             
             highest_iou = 0
 
+
+            if verbose:
+                print('On frame ', frame_number, ' mapped = ', mapped_results[frame_number])
+                print('Bboxes on frame ', frame_number, ': ', bboxes)
+
             # Might be multiple balls, just use the one with the highest iou (if one exists)
             for bbox in bboxes:
+                
                 iou = compute_iou(bbox, mapped_results[frame_number])
                 highest_iou = max(iou, highest_iou)
             
@@ -120,12 +126,14 @@ if __name__ == "__main__":
     # A2D amount
     parser.add_argument('--a2d_amt', type=int, default=10000, help='How many a2d samples to run on')
 
+    parser.add_argument('--verbose', type=str2bool, nargs='?', const=True, default=False, help='Enables extra logging')
+
     opt = parser.parse_args()
     print(opt.video)
 
     # Run and evaluate on the a2d dataset
     if opt.a2d:
-        run_a2d(opt.a2d_amt)
+        run_a2d(opt.a2d_amt, opt.verbose)
         sys.exit()
     
     video = cv.VideoCapture(opt.video)
