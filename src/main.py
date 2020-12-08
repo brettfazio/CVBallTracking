@@ -21,7 +21,7 @@ def yolo_track(video_path):
     
     return mapped_results
 
-def track(video_path):
+def track(video_path, opt):
 
     video = cv.VideoCapture(video_path)
 
@@ -64,15 +64,21 @@ if __name__ == "__main__":
     parser.add_argument("--fast", type=str2bool, nargs='?', const=True, default=False, help="Forwards pass only")
 
     parser.add_argument("--live", type=str2bool, nargs='?', const=True, default=False, help="Show results live")
+
+    parser.add_argument('--a2d', type=str2bool, nargs='?', const=True, default=False, help='Run on the A2D dataset')
+
     opt = parser.parse_args()
     print(opt.video)
 
+    # Run and evaluate on the a2d dataset
+    if opt.a2d:
+        return
 
     video = cv.VideoCapture(opt.video)
 
     # Perform specified tracking/localization mode
     if opt.mode == 'track':
-        mapped_results = track(opt.video)
+        mapped_results = track(opt.video, opt)
     else:
         mapped_results = yolo_track(opt.video)
 
