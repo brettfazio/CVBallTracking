@@ -1,7 +1,7 @@
 import numpy as np
 
 from detect import detect
-from util import compute_iou
+from utility import compute_iou
 
 """
 The following will run YOLO on every frame of the video to use it as a source 
