@@ -41,8 +41,12 @@ def track(video_path):
             break
 
         index += 1
+        if index % 10 == 0:
+            print(f"Running detect on frame {index}\n")
+
     video.release() 
     # Now that we have the bounding box of the ball we can run opencv_track
+    print(f"Detected ball on frame {index}\n")
     mapped_results = opencv_track(video_path, 'CSRT', index, bounding, opt.fast, opt.live)
 
     return mapped_results
