@@ -72,8 +72,8 @@ if __name__ == "__main__":
 
     # Run and evaluate on the a2d dataset
     if opt.a2d:
-        return
-
+        sys.exit()
+    
     video = cv.VideoCapture(opt.video)
 
     # Perform specified tracking/localization mode
