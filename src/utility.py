@@ -124,6 +124,10 @@ def get_matlab_bboxes(path):
         
         if s == 'ball':
             # Use bbox at this index
-            bboxes.append(f['reBBox'][i])
+            # They are column based
+            bbox = []
+            for idx in np.arange(4):
+                bbox.append(f['reBBox'][idx][i])
+            bboxes.append(bbox)
 
     return bboxes, frame_number
