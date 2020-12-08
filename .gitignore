@@ -11,3 +11,4 @@ darknet53.conv.74
 src/output/*
 src/temp/*
 *.avi
+/a2d/Release/*
