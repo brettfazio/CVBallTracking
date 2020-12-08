@@ -52,11 +52,13 @@ def track(video_path, fast, live):
 
     return mapped_results
 
-def run_a2d():
+def run_a2d(amt):
     df = get_a2d_df()
 
     # Iterate over all videos in a2d
     for index, row in df.iterrows():
+        if index > amt:
+            break
         # This is the video ID
         vid = row['VID']
 
@@ -70,6 +72,7 @@ def run_a2d():
 
         # Now that we have the mapped prediction, we will have to do some semi-complex parsing
         # of the matlab files to get the bounding boxes. A2D only gives the BBoxes in matlab.
+        mats_folder = '../a2d/Release/Annotations/mat/' + vid + '/'
 
     return
 
@@ -87,14 +90,17 @@ if __name__ == "__main__":
 
     parser.add_argument("--live", type=str2bool, nargs='?', const=True, default=False, help="Show results live")
 
+    # Should it run on a2d dataset
     parser.add_argument('--a2d', type=str2bool, nargs='?', const=True, default=False, help='Run on the A2D dataset')
+    # A2D amount
+    parser.add_argument('--a2d_amt', type=int, default=10000, help='How many a2d samples to run on')
 
     opt = parser.parse_args()
     print(opt.video)
 
     # Run and evaluate on the a2d dataset
     if opt.a2d:
-        run_a2d()
+        run_a2d(opt.a2d_amt)
         sys.exit()
     
     video = cv.VideoCapture(opt.video)
