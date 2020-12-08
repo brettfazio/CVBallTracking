@@ -13,7 +13,7 @@ from utility import get_tracker
    Returns map of frame to bbox tracked in that frame
 """
 
-def opencv_track(file, tracker_type, start, bbox):
+def opencv_track(file, tracker_type, start, bbox, fast):
     tracker = get_tracker(tracker_type)
     print(f"Using {tracker_type} tracking")
 
@@ -61,7 +61,8 @@ def opencv_track(file, tracker_type, start, bbox):
             break
         
         if current_frame < start:
-            backwards_frames.insert(0, frame)
+            if not fast:
+                backwards_frames.insert(0, frame)
             current_frame += 1
             continue
 
