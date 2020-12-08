@@ -43,7 +43,7 @@ def track(video_path):
         index += 1
     video.release() 
     # Now that we have the bounding box of the ball we can run opencv_track
-    mapped_results = opencv_track(video_path, 'CSRT', index, bounding, opt.fast)
+    mapped_results = opencv_track(video_path, 'CSRT', index, bounding, opt.fast, opt.live)
 
     return mapped_results
 
