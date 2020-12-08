@@ -1,6 +1,7 @@
 import cv2 as cv2
 
 import pandas as pd
+import os
 
 PATH_TO_A2D_CSV = '../a2d/videoset.csv'
 
@@ -94,3 +95,16 @@ def get_a2d_df():
     test_df = videoset[videoset['Usage'] == 1]
 
     return videoset
+
+def get_matlab_bboxes(path):
+    # first parse out frame number
+    base = os.path.basename(path)
+
+    file_name = os.path.splitext(base)[0]
+
+    frame_number = int(file_name)
+
+    # Now find the ball bounding boxes
+    bboxes = []
+
+    return bboxes, frame_number

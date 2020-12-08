@@ -11,11 +11,13 @@ import cv2 as cv
 import sys
 import numpy as np
 import pandas as pd
+import os
+import glob
 
 from tracking import opencv_track, overlap_track
 from detect import detect
 from evaluate import yolo_based_eval
-from utility import str2bool, get_a2d_df
+from utility import str2bool, get_a2d_df, get_matlab_bboxes, compute_iou
 
 def yolo_track(video_path):
     mapped_results = overlap_track(video_path)
@@ -74,7 +76,30 @@ def run_a2d(amt):
         # of the matlab files to get the bounding boxes. A2D only gives the BBoxes in matlab.
         mats_folder = '../a2d/Release/Annotations/mat/' + vid + '/'
 
-    return
+        # Paths of each of the matrices
+        mats_paths = glob.glob(mats_folder + '*.mat')
+
+        ious = []
+
+        for path in mats_paths:
+            bboxes, frame_number = get_matlab_bboxes(path)
+            
+            highest_iou = 0
+
+            # Might be multiple balls, just use the one with the highest iou (if one exists)
+            for bbox in bboxes:
+                iou = compute_iou(bbox, mapped_results[frame_number])
+                highest_iou = max(iou, highest_iou)
+            
+            ious.append(highest_iou)
+
+        avg_iou = sum(ious) / float(len(ious))
+        
+        print('Avg IOU = ' + avg_iou)
+
+    
+    print('Completed a2d run')
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
