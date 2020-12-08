@@ -29,6 +29,7 @@ def track(video_path, fast, live):
     video = cv.VideoCapture(video_path)
 
     bounding = np.array([])
+    found = False
     index = 0
 
     while video.isOpened():
@@ -41,6 +42,7 @@ def track(video_path, fast, live):
         # For now just use the first bounding box found
         if len(bbox) > 0:
             bounding = bbox[0]
+            found = True
             break
 
         index += 1
@@ -48,11 +50,14 @@ def track(video_path, fast, live):
             print(f"Running detect on frame {index}\n")
 
     video.release() 
-    # Now that we have the bounding box of the ball we can run opencv_track
-    print(f"Detected ball on frame {index}\n")
-    mapped_results = opencv_track(video_path, 'CSRT', index, bounding, fast, live)
 
-    return mapped_results
+    if found:
+        # Now that we have the bounding box of the ball we can run opencv_track
+        print(f"Detected ball on frame {index}\n")
+        mapped_results = opencv_track(video_path, 'CSRT', index, bounding, fast, live)
+        return mapped_results
+    else:
+        return {}
 
 def run_a2d(amt, verbose):
     df = get_a2d_df()
@@ -140,7 +145,7 @@ if __name__ == "__main__":
 
     # Perform specified tracking/localization mode
     if opt.mode == 'track':
-        mapped_results = track(opt.video, opt)
+        mapped_results = track(opt.video, opt.fast, opt.live)
     else:
         mapped_results = yolo_track(opt.video)
 
