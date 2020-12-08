@@ -60,9 +60,12 @@ def opencv_track(file, tracker_type, start, bbox):
 
     # Reshape bbox input
     bbox = (bbox[0]-extra_size, bbox[1]-extra_size, bbox[2]+extra_size*2, bbox[3]+extra_size*2)
+    initial_bbox = bbox
 
     # Go through each frame
     current_frame = 0
+    backwards_frames = list()
+    forwards_frames = list()
     while True:
         
         # Read a new frame
@@ -72,7 +75,7 @@ def opencv_track(file, tracker_type, start, bbox):
             break
         
         if current_frame < start:
-            result.write(frame)
+            backwards_frames.insert(0, frame)
             current_frame += 1
             continue
 
@@ -84,9 +87,6 @@ def opencv_track(file, tracker_type, start, bbox):
             print ('failed to init tracker')
             break
          
-        # Start timer
-        timer = cv2.getTickCount()
- 
         # Update tracker
         ok, bbox = tracker.update(frame)
 
@@ -101,8 +101,17 @@ def opencv_track(file, tracker_type, start, bbox):
             cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
  
         # Display result, write to vid
-        result.write(frame)
+        forwards_frames.append(frame)
         current_frame += 1
+
+    if backwards_frames:
+        backwards = backwards_track(backwards_frames, tracker_type, initial_bbox)
+
+    for frame in backwards[0]:
+        result.write(frame)
+
+    for frame in forwards_frames:
+        result.write(frame)
 
     # When everything done, release  
     # the video capture and video  
@@ -114,6 +123,51 @@ def opencv_track(file, tracker_type, start, bbox):
     cv2.destroyAllWindows()
 
     return ret
+
+def backwards_track(frames, tracker_type, bbox):
+    if tracker_type == 'BOOSTING':
+        tracker = cv2.TrackerBoosting_create()
+    if tracker_type == 'MIL':
+        tracker = cv2.TrackerMIL_create()
+    if tracker_type == 'KCF':
+        tracker = cv2.TrackerKCF_create()
+    if tracker_type == 'TLD':
+        tracker = cv2.TrackerTLD_create()
+    if tracker_type == 'MEDIANFLOW':
+        tracker = cv2.TrackerMedianFlow_create()
+    if tracker_type == 'GOTURN':
+        tracker = cv2.TrackerGOTURN_create()
+    if tracker_type == 'MOSSE':
+        tracker = cv2.TrackerMOSSE_create()
+    if tracker_type == "CSRT":
+        tracker = cv2.TrackerCSRT_create()
+
+    bbox_results = {}
+    frame_results = list()
+    ok = tracker.init(frames[0], bbox)
+    if not ok:
+        print ('failed to init tracker')
+        return 
+    current_frame = 0
+    for frame in frames:
+ 
+        # Update tracker
+        ok, bbox = tracker.update(frame)
+
+        # Update bbox output
+        bbox_results[current_frame] = bbox
+ 
+        # Draw bounding box
+        if ok:
+            # Tracking success
+            p1 = (int(bbox[0]), int(bbox[1]))
+            p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
+            cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+ 
+        # Display result, write to vid
+        frame_results.insert(0, frame)
+        current_frame += 1
+    return frame_results, bbox_results
 
 """
 
