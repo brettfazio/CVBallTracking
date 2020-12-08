@@ -70,6 +70,8 @@ def opencv_track(file, tracker_type, start, bbox, fast, live):
         if current_frame < start:
             if not fast:
                 backwards_frames.insert(0, frame)
+            else:
+                forwards_frames.append(frame)
             current_frame += 1
             continue
 
