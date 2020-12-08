@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 from detect import detect
 from utility import compute_iou
@@ -21,7 +22,7 @@ def yolo_based_eval(video_file, mapped_predictions):
     # Go through frames of the video
     frame_index = -1
 
-    sum_of_iou = 0.0
+    ious = []
     iou_counted = 0
 
     while video.isOpened():
@@ -58,11 +59,15 @@ def yolo_based_eval(video_file, mapped_predictions):
 
         # Otherwise use the highest overlap box
         # Add to the total
-        sum_of_iou += highest
+        ious.append(highest)
         iou_counted += 1
 
 
-    average_iou = sum_of_iou / float(iou_counted)
+    average_iou = sum(ious) / float(iou_counted)
+
+    plt.plot(ious)
+    plt.show()
+
     # Return average iou
     return average_iou
 
