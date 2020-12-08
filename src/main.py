@@ -15,7 +15,7 @@ from tracking import opencv_track, overlap_track
 from detect import detect
 
 def yolo_track(video_path):
-    overlap_track(video_path)
+    mapped_results = overlap_track(video_path)
 
 def track(video_path):
 
@@ -48,7 +48,8 @@ if __name__ == "__main__":
     # Specify mode (either yolo or track). yolo runs localization on every frame
     # track just tracks it after it finds the initial box.
     parser.add_argument("--mode", type=str, default="track", help='yolo or track')
-
+    # Specify evaluation method (or if eval should be performed at all)
+    parser.add_argument("--eval", type=str, default='none', help='none or yolo or sot')
     opt = parser.parse_args()
     print(opt.video)
 
