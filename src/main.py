@@ -57,9 +57,9 @@ if __name__ == "__main__":
     # Specify evaluation method (or if eval should be performed at all)
     parser.add_argument("--eval", type=str, default='none', help='none or yolo or sot')
 
-    parser.add_argument("--fast", type=str2bool, nargs='?',
-                        const=True, default=False,
-                        help="Activate nice mode.")
+    parser.add_argument("--fast", type=str2bool, nargs='?', const=True, default=False, help="Forwards pass only")
+
+    parser.add_argument("--live", type=str2bool, nargs='?', const=True, default=False, help="Show results live")
     opt = parser.parse_args()
     print(opt.video)
 
