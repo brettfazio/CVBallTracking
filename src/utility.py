@@ -1,3 +1,5 @@
+import cv2 as cv2
+
 """
 
 Function to be used in multiple parts of our project. It computes the IOU score of two provided bounding boxes.
@@ -28,3 +30,23 @@ def compute_iou(bbox_a, bbox_b):
     iou = inter_area / float(a_area + b_area - inter_area)
 
     return iou
+
+def get_tracker(tracker_type):
+    if tracker_type == 'BOOSTING':
+        tracker = cv2.TrackerBoosting_create()
+    if tracker_type == 'MIL':
+        tracker = cv2.TrackerMIL_create()
+    if tracker_type == 'KCF':
+        tracker = cv2.TrackerKCF_create()
+    if tracker_type == 'TLD':
+        tracker = cv2.TrackerTLD_create()
+    if tracker_type == 'MEDIANFLOW':
+        tracker = cv2.TrackerMedianFlow_create()
+    if tracker_type == 'GOTURN':
+        tracker = cv2.TrackerGOTURN_create()
+    if tracker_type == 'MOSSE':
+        tracker = cv2.TrackerMOSSE_create()
+    if tracker_type == "CSRT":
+        tracker = cv2.TrackerCSRT_create()
+
+    return tracker
