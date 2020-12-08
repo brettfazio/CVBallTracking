@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+import cv2 as cv2
+
 from detect import detect
 from utility import compute_iou
 
