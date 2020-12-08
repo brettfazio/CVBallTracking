@@ -2,7 +2,7 @@ import cv2
 import sys
 
 from detect import detect
-from utility import get_tracker
+from utility import get_tracker, compute_iou
 
 """
    Outputs video of tracked object given:
@@ -201,29 +201,37 @@ def overlap_track(file):
     # Go through each frame
     current_frame = 0
     while True:
-        
+        # save box from last frame
+        last_bbox = best_box
+
         # Read a new frame
         ok, frame = video.read()
         print(current_frame)
-         
-        # Start timer
-        timer = cv2.getTickCount()
  
         # Update tracker
         if ok:
             bbox = detect(frame)
         else:
             break
+
         # Update bbox output
         ret[current_frame] = bbox
- 
+        
         # Draw bounding box
         if bbox:
-            bbox = bbox[0]
+            # Get most matching box
+            best_box = None
+            best_score = -1
+            for box in bbox:
+                score = compute_iou(box, last_bbox)
+                if score > best_score:
+                    best_score = score
+                    best_box = box
+
             # Tracking success
-            bbox = (bbox[0], bbox[1], bbox[2], bbox[3])
-            p1 = (int(bbox[0]), int(bbox[1]))
-            p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
+            best_box = (best_box[0], best_box[1], best_box[2], best_box[3])
+            p1 = (int(best_box[0]), int(best_box[1]))
+            p2 = (int(best_box[0] + best_box[2]), int(best_box[1] + best_box[3]))
             cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
  
         # Display result, write to vid
