@@ -10,18 +10,19 @@ import argparse
 import cv2 as cv
 import sys
 import numpy as np
+import pandas as pd
 
 from tracking import opencv_track, overlap_track
 from detect import detect
 from evaluate import yolo_based_eval
-from utility import str2bool
+from utility import str2bool, get_a2d_df
 
 def yolo_track(video_path):
     mapped_results = overlap_track(video_path)
     
     return mapped_results
 
-def track(video_path, opt):
+def track(video_path, fast, live):
 
     video = cv.VideoCapture(video_path)
 
@@ -47,9 +48,30 @@ def track(video_path, opt):
     video.release() 
     # Now that we have the bounding box of the ball we can run opencv_track
     print(f"Detected ball on frame {index}\n")
-    mapped_results = opencv_track(video_path, 'CSRT', index, bounding, opt.fast, opt.live)
+    mapped_results = opencv_track(video_path, 'CSRT', index, bounding, fast, live)
 
     return mapped_results
+
+def run_a2d():
+    df = get_a2d_df()
+
+    # Iterate over all videos in a2d
+    for index, row in df.iterrows():
+        # This is the video ID
+        vid = row['VID']
+
+        # Path of the video itself
+        path = '../a2d/Release/clips320H/' + vid + '.mp4'
+
+        print(path)
+
+        # Run tracking on that video to get the mapped predictions
+        mapped_results = track(path, False, False)
+
+        # Now that we have the mapped prediction, we will have to do some semi-complex parsing
+        # of the matlab files to get the bounding boxes. A2D only gives the BBoxes in matlab.
+
+    return
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -72,6 +94,7 @@ if __name__ == "__main__":
 
     # Run and evaluate on the a2d dataset
     if opt.a2d:
+        run_a2d()
         sys.exit()
     
     video = cv.VideoCapture(opt.video)

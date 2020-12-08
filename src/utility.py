@@ -2,7 +2,7 @@ import cv2 as cv2
 
 import pandas as pd
 
-PATH_TO_A2D = '../a2d/videoset.csv'
+PATH_TO_A2D_CSV = '../a2d/videoset.csv'
 
 """
 
@@ -72,7 +72,7 @@ def get_tracker(tracker_type):
     return tracker
 
 def get_a2d_df():
-    videoset_path = PATH_TO_A2D + 'videoset.csv'
+    videoset_path = PATH_TO_A2D_CSV
 
     videoset = pd.read_csv(videoset_path)
 
@@ -92,3 +92,5 @@ def get_a2d_df():
 
     train_df = videoset[videoset['Usage'] == 0]
     test_df = videoset[videoset['Usage'] == 1]
+
+    return videoset
