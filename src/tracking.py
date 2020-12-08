@@ -13,7 +13,7 @@ from utility import get_tracker
    Returns map of frame to bbox tracked in that frame
 """
 
-def opencv_track(file, tracker_type, start, bbox):
+def opencv_track(file, tracker_type, start, bbox, fast, live):
     tracker = get_tracker(tracker_type)
     print(f"Using {tracker_type} tracking")
 
@@ -24,7 +24,12 @@ def opencv_track(file, tracker_type, start, bbox):
     if not video.isOpened():
         print ("Could not open video")
         sys.exit()
- 
+    
+    # live tracking only works on fast mode
+    if live and not fast:
+        live = False
+        print("Live tracking only works on fast mode\n")
+
     # Get video dimensions
     frame_width = int(video.get(3)) 
     frame_height = int(video.get(4)) 
@@ -60,8 +65,10 @@ def opencv_track(file, tracker_type, start, bbox):
         if not ok:
             break
         
+        # keep track of frames prior to initial detect if fast mode is off
         if current_frame < start:
-            backwards_frames.insert(0, frame)
+            if not fast:
+                backwards_frames.insert(0, frame)
             current_frame += 1
             continue
 
@@ -86,22 +93,27 @@ def opencv_track(file, tracker_type, start, bbox):
             p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
             cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
  
-        # Display result, write to vid
+        # Display result, save tracked frames
         forwards_frames.append(frame)
         current_frame += 1
+        if live:
+            cv2.imshow(f"{tracker_type} Tracking", frame)
+        
+        # Exit if ESC pressed
+        k = cv2.waitKey(1) & 0xff
+        if k == 27 : break
 
+    # write to file
     if backwards_frames:
         backwards = backwards_track(backwards_frames, tracker_type, initial_bbox)
         for frame in backwards[0]:
             result.write(frame)
+        ret.update(backwards[1])
     
-
     for frame in forwards_frames:
         result.write(frame)
 
-    # When everything done, release  
-    # the video capture and video  
-    # write objects 
+    # When everything done, release the video capture and video  
     video.release() 
     result.release() 
 
@@ -110,6 +122,12 @@ def opencv_track(file, tracker_type, start, bbox):
 
     return ret
 
+"""
+
+Given a set of frames in reverse order and an initial bbox,
+Track the object and return the results in the correct order.
+
+"""
 def backwards_track(frames, tracker_type, bbox):
     tracker = get_tracker(tracker_type)
 

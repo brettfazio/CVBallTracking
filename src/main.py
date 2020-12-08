@@ -14,6 +14,7 @@ import numpy as np
 from tracking import opencv_track, overlap_track
 from detect import detect
 from evaluate import yolo_based_eval
+from utility import str2bool
 
 def yolo_track(video_path):
     mapped_results = overlap_track(video_path)
@@ -42,7 +43,7 @@ def track(video_path):
         index += 1
     video.release() 
     # Now that we have the bounding box of the ball we can run opencv_track
-    mapped_results = opencv_track(video_path, 'CSRT', index, bounding)
+    mapped_results = opencv_track(video_path, 'CSRT', index, bounding, opt.fast, opt.live)
 
     return mapped_results
 
@@ -55,6 +56,10 @@ if __name__ == "__main__":
     parser.add_argument("--mode", type=str, default="track", help='yolo or track')
     # Specify evaluation method (or if eval should be performed at all)
     parser.add_argument("--eval", type=str, default='none', help='none or yolo or sot')
+
+    parser.add_argument("--fast", type=str2bool, nargs='?', const=True, default=False, help="Forwards pass only")
+
+    parser.add_argument("--live", type=str2bool, nargs='?', const=True, default=False, help="Show results live")
     opt = parser.parse_args()
     print(opt.video)
 
