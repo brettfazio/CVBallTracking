@@ -21,6 +21,9 @@ def yolo_based_eval(video_file, mapped_predictions):
     # Go through frames of the video
     frame_index = -1
 
+    sum_of_iou = 0.0
+    iou_counted = 0
+
     while video.isOpened():
         frame_index += 1
         ok, frame = video.read()
@@ -54,10 +57,14 @@ def yolo_based_eval(video_file, mapped_predictions):
             continue
 
         # Otherwise use the highest overlap box
-        
+        # Add to the total
+        sum_of_iou += highest
+        iou_counted += 1
 
-    # Return evaluation data
-    return
+
+    average_iou = sum_of_iou / float(iou_counted)
+    # Return average iou
+    return average_iou
 
 
 """
