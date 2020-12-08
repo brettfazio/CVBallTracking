@@ -4,9 +4,13 @@
 
 ![](assets/davis.gif)
 
-![](assets/forwards.gif) ![](assets/full.gif)
-
 ## Overview
+
+### Forward Pass Only
+![](assets/forwards.gif) 
+
+### Track Backwards + Forwards
+![](assets/full.gif)
 
 ## References
 
