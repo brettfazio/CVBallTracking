@@ -62,12 +62,13 @@ def track(video_path, fast, live):
 def run_a2d(amt, verbose):
     df = get_a2d_df()
 
+    cnt = 0
+
     # Iterate over all videos in a2d
     for index, row in df.iterrows():
-        if index == 1:
-            continue
-        if index > amt:
+        if cnt > amt:
             break
+        cnt += 1
         # This is the video ID
         vid = row['VID']
 
