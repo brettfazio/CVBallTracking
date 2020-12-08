@@ -3,6 +3,9 @@ import cv2 as cv2
 import pandas as pd
 import os
 
+# for parsing a2d. not needed if just running on video input
+import h5py
+
 PATH_TO_A2D_CSV = '../a2d/videoset.csv'
 
 """
@@ -106,5 +109,20 @@ def get_matlab_bboxes(path):
 
     # Now find the ball bounding boxes
     bboxes = []
+
+    f = h5py.File(path, 'a')
+
+    itrs = f['class'].shape
+    itrs = itrs[1]
+
+    for i in np.arange(itrs):
+        obj = f['class'][0][i]
+        s = ''
+        for k in np.arange(4):
+            s += chr(f[thing][k][0])
+        
+        if s == 'ball':
+            # Use bbox at this index
+            bboxes.append(f['reBBox'][i])
 
     return bboxes, frame_number
