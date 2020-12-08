@@ -1,10 +1,28 @@
 # Basketball Tracking 🏀⛹🏻‍♀️⛹🏿‍♂️
 
+Created by [Brett Fazio](http://linkedin.com/in/brett-fazio/) and [William Chen](https://www.linkedin.com/in/william-chen-6474a216b/)
+
 ![](assets/bron.gif)
 
 ![](assets/davis.gif)
 
 ## Overview
+
+## Usage
+
+The main entry point for this project is `main.py`. To avoid errors, please run it from the `src` directory. 
+
+The most basic usage for the project would be to run on a single input video. It can be done as follows:
+
+```
+python3 main.py --video PATH
+```
+
+Where `PATH` is a path to a video file, for example:
+
+```
+python3 main.py --video ../sample_data/lebron_on_court.mp4
+```
 
 ### Forward Pass Only
 ![](assets/forwards.gif) 
