@@ -199,6 +199,7 @@ def overlap_track(file):
     ret = {}
 
     # Go through each frame
+    best_box = None
     current_frame = 0
     while True:
         # save box from last frame
@@ -223,16 +224,20 @@ def overlap_track(file):
             best_box = None
             best_score = -1
             for box in bbox:
-                score = compute_iou(box, last_bbox)
-                if score > best_score:
-                    best_score = score
+                if last_bbox:
+                    score = compute_iou(box, last_bbox)
+                    if score > best_score:
+                        best_score = score
+                        best_box = box
+                else:
                     best_box = box
 
             # Tracking success
-            best_box = (best_box[0], best_box[1], best_box[2], best_box[3])
-            p1 = (int(best_box[0]), int(best_box[1]))
-            p2 = (int(best_box[0] + best_box[2]), int(best_box[1] + best_box[3]))
-            cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+            if best_box:
+                best_box = (best_box[0], best_box[1], best_box[2], best_box[3])
+                p1 = (int(best_box[0]), int(best_box[1]))
+                p2 = (int(best_box[0] + best_box[2]), int(best_box[1] + best_box[3]))
+                cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
  
         # Display result, write to vid
         result.write(frame)
