@@ -4,7 +4,7 @@
 
 ![](assets/davis.gif)
 
-![](assets/forward.gif) ![](assets/full.gif)
+![](assets/forwards.gif) ![](assets/full.gif)
 
 ## Overview
 
