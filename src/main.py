@@ -108,7 +108,7 @@ def run_a2d(amt, verbose):
 
         avg_iou = sum(ious) / float(len(ious))
         
-        print('Avg IOU = ' + avg_iou)
+        print('Avg IOU = ' + str(avg_iou))
 
     
     print('Completed a2d run')

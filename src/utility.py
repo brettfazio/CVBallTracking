@@ -128,6 +128,8 @@ def get_matlab_bboxes(path):
             bbox = []
             for idx in np.arange(4):
                 bbox.append(f['reBBox'][idx][i])
+            bbox[2] = bbox[2] - bbox[0]
+            bbox[3] = bbox[3] - bbox[1]
             bboxes.append(bbox)
 
     return bboxes, frame_number
