@@ -30,6 +30,10 @@ def opencv_track(file, tracker_type, start, bbox, fast, live):
         live = False
         print("Live tracking only works on fast mode\n")
 
+    if not bbox:
+        print ("No bbox given")
+        sys.exit()
+
     # Get video dimensions
     frame_width = int(video.get(3)) 
     frame_height = int(video.get(4)) 
