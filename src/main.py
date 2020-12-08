@@ -16,17 +16,6 @@ from detect import detect
 
 def yolo_track(video_path):
     overlap_track(video_path)
-    """video = cv.VideoCapture(video_path)
-
-    while video.isOpened():
-        ok, frame = video.read()
-
-        if not ok:
-            break
-
-        bbox = detect(frame)"""
-
-    
 
 def track(video_path):
 
