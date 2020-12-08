@@ -68,6 +68,6 @@ if __name__ == "__main__":
         mapped_results = yolo_track(opt.video)
 
     # Evaluate using specified method
-    if opt.mode == 'yolo':
+    if opt.eval == 'yolo':
         avg_iou = yolo_based_eval(opt.video, mapped_results)
         print('YOLO-Based Average IOU computed as: ', avg_iou)
