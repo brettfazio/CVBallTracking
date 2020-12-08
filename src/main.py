@@ -44,7 +44,7 @@ def track(video_path):
     # Now that we have the bounding box of the ball we can run opencv_track
     mapped_results = opencv_track(video_path, 'CSRT', index, bounding)
 
-   return mapped_results
+    return mapped_results
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
