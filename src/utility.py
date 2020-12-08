@@ -2,6 +2,7 @@ import cv2 as cv2
 
 import pandas as pd
 import os
+import numpy as np
 
 # for parsing a2d. not needed if just running on video input
 import h5py
@@ -119,7 +120,7 @@ def get_matlab_bboxes(path):
         obj = f['class'][0][i]
         s = ''
         for k in np.arange(4):
-            s += chr(f[thing][k][0])
+            s += chr(f[obj][k][0])
         
         if s == 'ball':
             # Use bbox at this index

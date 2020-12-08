@@ -64,6 +64,8 @@ def run_a2d(amt, verbose):
 
     # Iterate over all videos in a2d
     for index, row in df.iterrows():
+        if index == 1:
+            continue
         if index > amt:
             break
         # This is the video ID
