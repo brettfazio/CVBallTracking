@@ -95,6 +95,7 @@ def yolo_based_eval(video_file, mapped_predictions):
     video.release() 
     result.release()
     plt.plot(ious)
+    plt.savefig(f"{video_file}.png")
     plt.show()
 
     # Return average iou
