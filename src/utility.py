@@ -40,6 +40,10 @@ def compute_iou(bbox_a, bbox_b):
 
     return iou
 
+
+"""
+Function used to convert strings to bools for use in main argument flags
+"""
 def str2bool(v):
     if isinstance(v, bool):
        return v
@@ -50,6 +54,9 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
+"""
+Helper method to allow the user to textually specify their desired tracker
+"""
 def get_tracker(tracker_type):
     if tracker_type == 'BOOSTING':
         tracker = cv2.TrackerBoosting_create()
@@ -70,6 +77,9 @@ def get_tracker(tracker_type):
 
     return tracker
 
+"""
+Parses the a2d csv file to get all videos with localized balls
+"""
 def get_a2d_df():
     videoset_path = PATH_TO_A2D_CSV
 
@@ -94,6 +104,10 @@ def get_a2d_df():
 
     return videoset
 
+"""
+A2d provides labeled bounding boxes in compiled MatLab files, this method parses
+said files and returns the bounding box contained in them
+"""
 def get_matlab_bboxes(path):
     # first parse out frame number
     base = os.path.basename(path)
