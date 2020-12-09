@@ -69,8 +69,7 @@ def run_a2d(amt, verbose):
         if cnt > amt:
             break
         cnt += 1
-        if index == 1:
-            continue
+
         # This is the video ID
         vid = row['VID']
 
@@ -81,6 +80,10 @@ def run_a2d(amt, verbose):
 
         # Run tracking on that video to get the mapped predictions
         mapped_results = track(path, False, False)
+        if not mapped_results:
+            print(f"Recall: 0, Precision: 0")
+            print('Avg IOU = 0')
+            continue
 
         # Now that we have the mapped prediction, we will have to do some semi-complex parsing
         # of the matlab files to get the bounding boxes. A2D only gives the BBoxes in matlab.
