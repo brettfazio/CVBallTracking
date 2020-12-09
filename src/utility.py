@@ -127,10 +127,12 @@ def get_matlab_bboxes(path):
     for i in np.arange(itrs):
         obj = f['class'][0][i]
         s = ''
-        for k in np.arange(4):
+
+        # only read 3 chars cause 'dog' is a class
+        for k in np.arange(3):
             s += chr(f[obj][k][0])
         
-        if s == 'ball':
+        if s == 'bal':
             # Use bbox at this index
             # They are column based
             bbox = []

@@ -155,7 +155,6 @@ def eval_recall(mapped_truth, mapped_predictions):
                 true_positives += 1
 
     # Compute recall by: TP / (TP + FN)
-    return true_positives / (true_positives + false_negatives)
     if true_positives + false_negatives <= 0:
         return 0
     return true_positives / (true_positives + false_negatives)
