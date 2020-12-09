@@ -73,6 +73,7 @@ def detect(image):
 
     image_folder = 'temp'
 
+    # Load the folder containing our frame
     dataloader = DataLoader(
         ImageFolder(image_folder, img_size=image_size),
         batch_size=batch_size,
