@@ -16,7 +16,7 @@ import glob
 
 from tracking import opencv_track, overlap_track
 from detect import detect
-from evaluate import yolo_based_eval
+from evaluate import yolo_based_eval, eval_precision, eval_recall
 from utility import str2bool, get_a2d_df, get_matlab_bboxes, compute_iou
 
 def yolo_track(video_path):
@@ -69,6 +69,8 @@ def run_a2d(amt, verbose):
         if cnt > amt:
             break
         cnt += 1
+        if index == 1:
+            continue
         # This is the video ID
         vid = row['VID']
 
@@ -88,27 +90,33 @@ def run_a2d(amt, verbose):
         mats_paths = glob.glob(mats_folder + '*.mat')
 
         ious = []
+        mapped_truths = {}
 
         for path in mats_paths:
             bboxes, frame_number = get_matlab_bboxes(path)
-            
-            highest_iou = 0
-
 
             if verbose:
                 print('On frame ', frame_number, ' mapped = ', mapped_results[frame_number])
                 print('Bboxes on frame ', frame_number, ': ', bboxes)
 
             # Might be multiple balls, just use the one with the highest iou (if one exists)
+            highest_iou = 0
+            highest_bbox = None
             for bbox in bboxes:
                 
                 iou = compute_iou(bbox, mapped_results[frame_number])
-                highest_iou = max(iou, highest_iou)
+                if iou > highest_iou:
+                    highest_iou = iou
+                    highest_bbox = bbox
             
             ious.append(highest_iou)
+            if highest_bbox:
+                mapped_truths[frame_number] = highest_bbox
 
         avg_iou = sum(ious) / float(len(ious))
-        
+        precision = eval_precision(mapped_truths, mapped_results)
+        recall = eval_recall(mapped_truths, mapped_results)
+        print(f"Recall: {recall}, Precision: {precision}")
         print('Avg IOU = ' + str(avg_iou))
 
     
