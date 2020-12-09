@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import cv2 as cv2
 
 from detect import detect
-from utility import compute_iou
+from utility import compute_iou, reshape_to_rect
 
 """
 The following will run YOLO on every frame of the video to use it as a source 
@@ -52,16 +52,16 @@ def yolo_based_eval(video_file, mapped_predictions):
         # Get the YOLO set
 
         new_bboxes = detect(frame)
+
+        predicted_bbox = mapped_predictions[frame_index]
+        if predicted_bbox:
+            rect = reshape_to_rect(predicted_bbox)
+            cv2.rectangle(frame, rect[0], rect[1], (255,0,0), 2, 1)
+            cv2.putText(frame, f"Predicted Box", (0,frame_height-20), cv2.FONT_HERSHEY_SIMPLEX, 0.45,(255,0,0),2)
         
         if len(new_bboxes) == 0:
             # no detected balls to compare against. Cannot make any assumptions here.
-            predicted_bbox = mapped_predictions[frame_index]
-            if predicted_bbox:
-                p1 = (int(predicted_bbox[0]), int(predicted_bbox[1]))
-                p2 = (int(predicted_bbox[0] + predicted_bbox[2]), int(predicted_bbox[1] + predicted_bbox[3]))
-                cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
-                cv2.putText(frame, f"Predicted Box", (0,frame_height-20), cv2.FONT_HERSHEY_SIMPLEX, 0.45,(255,0,0),2)
-                result.write(frame)
+            result.write(frame)
             continue
 
         highest = 0
@@ -85,16 +85,10 @@ def yolo_based_eval(video_file, mapped_predictions):
         ious.append(highest)
         iou_counted += 1
 
-        p1 = (int(predicted_bbox[0]), int(predicted_bbox[1]))
-        p2 = (int(predicted_bbox[0] + predicted_bbox[2]), int(predicted_bbox[1] + predicted_bbox[3]))
-        cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
-
-        p1 = (int(highest_bbox[0]), int(highest_bbox[1]))
-        p2 = (int(highest_bbox[0] + highest_bbox[2]), int(highest_bbox[1] + highest_bbox[3]))
-        cv2.rectangle(frame, p1, p2, (0,255,0), 2, 1)
-
-        cv2.putText(frame, f"Predicted Box", (0,frame_height-20), cv2.FONT_HERSHEY_SIMPLEX, 0.45,(255,0,0),2)
+        rect = reshape_to_rect(highest_bbox)
+        cv2.rectangle(frame, rect[0], rect[1], (0,255,0), 2, 1)
         cv2.putText(frame, f"Truth Box", (0,frame_height-40), cv2.FONT_HERSHEY_SIMPLEX, 0.45,(0,255,0),2)
+
         result.write(frame)
 
     average_iou = sum(ious) / float(iou_counted)
