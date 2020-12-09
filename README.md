@@ -24,7 +24,7 @@ cd src/yolo/weights/
 bash download_weights.sh
 ```
 
-If you wish to use the GOTURN tracker instead of the CSRT tracker (we recommend CSRT) you must download the GOTURN model [here](https://github.com/Mogball/goturn-files)
+If you wish to use the GOTURN tracker instead of the CSRT tracker (we recommend CSRT) you must download the GOTURN model [here](https://github.com/Mogball/goturn-files).
 
 To run on the A2D dataset, the Release of the dataset itself is also required. It is available [here](https://web.eecs.umich.edu/~jjcorso/r/a2d/) and the unzipped folder entitled `Release` should be placed in the `/a2d` directory.
 
