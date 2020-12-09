@@ -15,8 +15,7 @@ The libraries to run the code are cv2, numpy, pandas, and h5py (if trying to run
 Additionally access to the YOLO tracker is required but this is already included in the `/src/yolo` folder. However, you must download the weights for the YOLO model. It can be done as follows:
 
 ```
-cd src/yolo/weights
-cd weights/
+cd src/yolo/weights/
 bash download_weights.sh
 ```
 
