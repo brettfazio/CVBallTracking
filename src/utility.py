@@ -133,3 +133,9 @@ def get_matlab_bboxes(path):
             bboxes.append(bbox)
 
     return bboxes, frame_number
+
+def reshape_to_rect(bbox):
+    p1 = (int(bbox[0]), int(bbox[1]))
+    p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
+
+    return p1, p2

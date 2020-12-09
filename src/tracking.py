@@ -2,7 +2,7 @@ import cv2
 import sys
 
 from detect import detect
-from utility import get_tracker, compute_iou
+from utility import get_tracker, compute_iou, reshape_to_rect
 
 """
    Outputs video of tracked object given:
@@ -96,9 +96,8 @@ def opencv_track(file, tracker_type, start, bbox, fast, live):
         # Draw bounding box
         if ok:
             # Tracking success
-            p1 = (int(bbox[0]), int(bbox[1]))
-            p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
-            cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+            rect = reshape_to_rect(bbox)
+            cv2.rectangle(frame, rect[0], rect[1], (255,0,0), 2, 1)
  
         # Display result, save tracked frames
         forwards_frames.append(frame)
@@ -156,9 +155,8 @@ def backwards_track(frames, tracker_type, bbox):
         # Draw bounding box
         if ok:
             # Tracking success
-            p1 = (int(bbox[0]), int(bbox[1]))
-            p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
-            cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+            rect = reshape_to_rect(bbox)
+            cv2.rectangle(frame, rect[0], rect[1], (255,0,0), 2, 1)
  
         # Display result, write to vid
         frame_results.insert(0, frame)
@@ -235,9 +233,8 @@ def overlap_track(file):
             # Tracking success
             if best_box:
                 best_box = (best_box[0], best_box[1], best_box[2], best_box[3])
-                p1 = (int(best_box[0]), int(best_box[1]))
-                p2 = (int(best_box[0] + best_box[2]), int(best_box[1] + best_box[3]))
-                cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+                rect = reshape_to_rect(best_box)
+                cv2.rectangle(frame, rect[0], rect[1], (255,0,0), 2, 1)
  
         # Display result, write to vid
         result.write(frame)
