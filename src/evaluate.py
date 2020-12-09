@@ -82,28 +82,42 @@ The below needs a labeled datasete to compare against the predictions.
 def bounded_eval(mapped_truth, mapped_predictions):
     return
 
+
+"""
+This method computes the percision of the results given a source of truth
+"""
 def eval_precision(mapped_truth, mapped_predictions):
     index = 0
     positives = 0.0
     true_positives = 0.0
 
+    # Iterate over all labeled SoT frames.
     for index in mapped_truth:
         if index in mapped_predictions.keys():
             positives += 1
+            # If the IOU is > 0.5 then this is a true positive
             if compute_iou(mapped_truth[index], mapped_predictions[index]) > 0.5:
                 true_positives += 1
                 
+    # Compute precision by float division of true positives by overall positives
     return true_positives / positives
 
+"""
+This method computes the recall of the results given a source of truth
+"""
 def eval_recall(mapped_truth, mapped_predictions):
     index = 0
     false_negatives = 0.0
     true_positives = 0.0
 
+    # Iterate over all labeled SoT frames
     for index in mapped_truth:
+        # If we failed to locate a ball on a frame we know has a ball, increment false negatives
         if index not in mapped_predictions.keys():
             false_negatives += 1
+        # If we successfully predicted/localized the ball, increment true positives
         elif compute_iou(mapped_truth[index], mapped_predictions[index]) > 0.5:
                 true_positives += 1
 
+    # Compute recall by: TP / (TP + FN)
     return true_positives / (true_positives + false_negatives)
