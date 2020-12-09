@@ -10,7 +10,12 @@ Created by [Brett Fazio](http://linkedin.com/in/brett-fazio/) and [William Chen]
 
 ## Requirements 
 
-The libraries to run the code are cv2, numpy, pandas, and h5py (if trying to run/evaluate on the A2D dataset). 
+The libraries to run the code are [cv2](https://pypi.org/project/opencv-python/), [numpy](https://numpy.org/), [pandas](https://pandas.pydata.org/), and [h5py](https://www.h5py.org/) (if trying to run/evaluate on the A2D dataset). 
+
+An extended version of cv2, ```opencv-contrib-python```, is required. Make sure this is the only cv2 package installed. ```opencv-python``` is a different package that does not include support for the trackers. Do not install multiple different opencv packages in the same environment.
+```
+pip install opencv-contrib-python
+```
 
 Additionally access to the YOLO tracker is required but this is already included in the `/src/yolo` folder. However, you must download the weights for the YOLO model. It can be done as follows:
 
