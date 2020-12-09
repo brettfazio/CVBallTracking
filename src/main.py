@@ -63,7 +63,7 @@ def track(video_path, fast, live):
 
 def run_a2d(amt, verbose):
     df = get_a2d_df()
-
+    avgs = []
     cnt = 0
 
     # Iterate over all videos in a2d
@@ -120,6 +120,7 @@ def run_a2d(amt, verbose):
                 mapped_truths[frame_number] = highest_bbox
 
         avg_iou = sum(ious) / float(len(ious))
+        avgs.append(avg_iou)
         precision = eval_precision(mapped_truths, mapped_results)
         recall = eval_recall(mapped_truths, mapped_results)
         print(f"Recall: {recall}, Precision: {precision}")
@@ -133,6 +134,13 @@ def run_a2d(amt, verbose):
         plt.ylabel('IOU', fontsize=16)
         plt.savefig(f"../a2d/plots/{vid}.png")
     
+    fig = plt.figure()
+    plt.xticks(np.arange(len(avgs)))
+    plt.plot(avgs)
+    fig.suptitle("IOU Score / Detected Frame", fontsize=20)
+    plt.xlabel('Frame Number', fontsize=18)
+    plt.ylabel('IOU', fontsize=16)
+    plt.savefig(f"../a2d/plots/a2d.png")
     print('Completed a2d run')
 
 

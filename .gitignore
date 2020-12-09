@@ -12,3 +12,4 @@ src/output/*
 src/temp/*
 *.avi
 /a2d/Release/*
+*.png
