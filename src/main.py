@@ -124,7 +124,12 @@ def run_a2d(amt, verbose):
         print(f"Recall: {recall}, Precision: {precision}")
         print('Avg IOU = ' + str(avg_iou))
 
+        fig = plt.figure()
+        plt.xticks(np.arange(len(ious)))
         plt.plot(ious)
+        fig.suptitle("IOU Score / Detected Frame", fontsize=20)
+        plt.xlabel('Frame Number', fontsize=18)
+        plt.ylabel('IOU', fontsize=16)
         plt.savefig(f"{path}.png")
     
     print('Completed a2d run')

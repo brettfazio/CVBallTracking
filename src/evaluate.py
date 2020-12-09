@@ -94,7 +94,12 @@ def yolo_based_eval(video_file, mapped_predictions):
     average_iou = sum(ious) / float(iou_counted)
     video.release() 
     result.release()
+    fig = plt.figure()
+    plt.xticks(np.arange(len(ious)))
     plt.plot(ious)
+    fig.suptitle("IOU Score / Frame", fontsize=20)
+    plt.xlabel('Frame', fontsize=18)
+    plt.ylabel('IOU', fontsize=16)
     plt.savefig(f"{video_file}.png")
     plt.show()
 
