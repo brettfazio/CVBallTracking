@@ -36,12 +36,6 @@ def compute_iou(bbox_a, bbox_b):
     a_area = bbox_a[2] * bbox_a[3]
     b_area = bbox_b[2] * bbox_b[3]
 
-    print(inter_area)
-
-    print(a_area)
-
-    print(b_area)
-
     iou = inter_area / float(a_area + b_area - inter_area)
 
     return iou

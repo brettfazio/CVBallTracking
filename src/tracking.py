@@ -182,6 +182,8 @@ def overlap_track(file):
         print ("Could not open video")
         sys.exit()
     
+    print("Using Overlap Tracking")
+
     # Get video dimensions
     frame_width = int(video.get(3)) 
     frame_height = int(video.get(4)) 
@@ -205,7 +207,6 @@ def overlap_track(file):
 
         # Read a new frame
         ok, frame = video.read()
-        print(current_frame)
  
         # Update tracker
         if ok:
