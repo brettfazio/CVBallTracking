@@ -42,6 +42,17 @@ Where `PATH` is a path to a video file, for example:
 python3 main.py --video ../sample_data/lebron_on_court.mp4
 ```
 
+Adding the `--fast` flag only tracks the ball in frames after the first detection. 
+```
+python3 main.py --video ../sample_data/lebron_on_court.mp4 --fast
+```
+
+Adding the `--live` flag allows for real-time tracking. Live tracking is only available when used with the `--fast` flag.
+Note: performance may be vary depending on CPU/GPU.
+```
+python3 main.py --video ../sample_data/lebron_on_court.mp4 --fast --live
+```
+
 ### Forward Pass Only
 ![](assets/forwards.gif) 
 
