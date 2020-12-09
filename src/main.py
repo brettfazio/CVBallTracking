@@ -13,11 +13,13 @@ import numpy as np
 import pandas as pd
 import os
 import glob
+import matplotlib.pyplot as plt
 
 from tracking import opencv_track, overlap_track
 from detect import detect
 from evaluate import yolo_based_eval, eval_precision, eval_recall
 from utility import str2bool, get_a2d_df, get_matlab_bboxes, compute_iou
+
 
 def yolo_track(video_path):
     mapped_results = overlap_track(video_path)
@@ -69,7 +71,8 @@ def run_a2d(amt, verbose):
         if cnt > amt:
             break
         cnt += 1
-
+        if index == 1:
+            continue
         # This is the video ID
         vid = row['VID']
 
@@ -122,6 +125,13 @@ def run_a2d(amt, verbose):
         print(f"Recall: {recall}, Precision: {precision}")
         print('Avg IOU = ' + str(avg_iou))
 
+        fig = plt.figure()
+        plt.xticks(np.arange(len(ious)))
+        plt.plot(ious)
+        fig.suptitle("IOU Score / Detected Frame", fontsize=20)
+        plt.xlabel('Frame Number', fontsize=18)
+        plt.ylabel('IOU', fontsize=16)
+        plt.savefig(f"../a2d/plots/{vid}.png")
     
     print('Completed a2d run')
 
