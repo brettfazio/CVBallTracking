@@ -71,7 +71,8 @@ def run_a2d(amt, verbose):
         if cnt > amt:
             break
         cnt += 1
-
+        if index == 1:
+            continue
         # This is the video ID
         vid = row['VID']
 
@@ -130,7 +131,7 @@ def run_a2d(amt, verbose):
         fig.suptitle("IOU Score / Detected Frame", fontsize=20)
         plt.xlabel('Frame Number', fontsize=18)
         plt.ylabel('IOU', fontsize=16)
-        plt.savefig(f"{path}.png")
+        plt.savefig(f"../a2d/plots/{vid}.png")
     
     print('Completed a2d run')
 
