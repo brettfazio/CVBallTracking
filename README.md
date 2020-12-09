@@ -12,7 +12,13 @@ Created by [Brett Fazio](http://linkedin.com/in/brett-fazio/) and [William Chen]
 
 The libraries to run the code are cv2, numpy, pandas, and h5py (if trying to run/evaluate on the A2D dataset). 
 
-Additionally access to the YOLO tracker is required but this is already included in the `/src/yolo` folder.
+Additionally access to the YOLO tracker is required but this is already included in the `/src/yolo` folder. However, you must download the weights for the YOLO model. It can be done as follows:
+
+```
+cd src/yolo/weights
+cd weights/
+bash download_weights.sh
+```
 
 To run on the A2D dataset, the Release of the dataset itself is also required. It is available [here](https://web.eecs.umich.edu/~jjcorso/r/a2d/) and the unzipped folder entitled `Release` should be placed in the `/a2d` directory.
 
