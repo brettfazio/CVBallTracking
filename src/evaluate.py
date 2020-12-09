@@ -87,13 +87,12 @@ def eval_precision(mapped_truth, mapped_predictions):
     positives = 0.0
     true_positives = 0.0
 
-    for index in mapped_predictions:
-        positives += 1
-        if index in mapped_truth.keys():
+    for index in mapped_truth:
+        if index in mapped_predictions.keys():
+            positives += 1
             if compute_iou(mapped_truth[index], mapped_predictions[index]) > 0.5:
                 true_positives += 1
-    index += 1
-
+                
     return true_positives / positives
 
 def eval_recall(mapped_truth, mapped_predictions):
