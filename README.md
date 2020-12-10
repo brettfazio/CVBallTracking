@@ -1,11 +1,5 @@
 # Basketball Tracking 🏀⛹🏻‍♀️⛹🏿‍♂️
 
-Created by [Brett Fazio](http://linkedin.com/in/brett-fazio/) and [William Chen](https://www.linkedin.com/in/william-chen-6474a216b/)
-
-![](assets/bron.gif)
-
-![](assets/davis.gif)
-
 ## Overview
 
 ## Requirements 
@@ -60,12 +54,6 @@ To run A2D add the `--a2d` flag, and then to specify the number of samples use `
 ```
 python3 main.py --a2d --a2d_amt 5
 ```
-
-### Forward Pass Only
-![](assets/forwards.gif) 
-
-### Track Backwards + Forwards
-![](assets/full.gif)
 
 ## References / Credit
 
