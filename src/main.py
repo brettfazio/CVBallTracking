@@ -64,6 +64,8 @@ def track(video_path, fast, live):
 def run_a2d(amt, verbose):
     df = get_a2d_df()
     avgs = []
+    recalls = []
+    precisions = []
     cnt = 0
 
     # Iterate over all videos in a2d
@@ -123,6 +125,8 @@ def run_a2d(amt, verbose):
         avgs.append(avg_iou)
         precision = eval_precision(mapped_truths, mapped_results)
         recall = eval_recall(mapped_truths, mapped_results)
+        precisions.append(precision)
+        recalls.append(recall)
         print(f"Recall: {recall}, Precision: {precision}")
         print('Avg IOU = ' + str(avg_iou))
 
@@ -137,10 +141,25 @@ def run_a2d(amt, verbose):
     fig = plt.figure()
     plt.xticks(np.arange(len(avgs)))
     plt.plot(avgs)
-    fig.suptitle("IOU Score / Detected Frame", fontsize=20)
-    plt.xlabel('Frame Number', fontsize=18)
+    fig.suptitle("Avg IOU / Sample", fontsize=20)
+    plt.xlabel('Sample Number', fontsize=18)
     plt.ylabel('IOU', fontsize=16)
-    plt.savefig(f"../a2d/plots/a2d.png")
+    plt.savefig(f"../a2d/plots/iou.png")
+
+    plt.xticks(np.arange(len(avgs)))
+    plt.plot(recalls)
+    fig.suptitle("Recall / Sample", fontsize=20)
+    plt.xlabel('Sample Number', fontsize=18)
+    plt.ylabel('Recall', fontsize=16)
+    plt.savefig(f"../a2d/plots/recall.png")
+
+    plt.xticks(np.arange(len(avgs)))
+    plt.plot(precisions)
+    fig.suptitle("Precision / Sample", fontsize=20)
+    plt.xlabel('Sample Number', fontsize=18)
+    plt.ylabel('Precision', fontsize=16)
+    plt.savefig(f"../a2d/plots/precision.png")
+
     print('Completed a2d run')
 
 
