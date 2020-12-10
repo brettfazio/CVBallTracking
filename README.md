@@ -55,6 +55,12 @@ Note: performance may be vary depending on CPU/GPU.
 python3 main.py --video ../sample_data/lebron_on_court.mp4 --fast --live
 ```
 
+To run A2D add the `--a2d` flag, and then to specify the number of samples use `--a2d_amt`. For example:
+
+```
+python3 main.py --a2d --a2d_amt 5
+```
+
 ### Forward Pass Only
 ![](assets/forwards.gif) 
 
