@@ -13,3 +13,4 @@ src/temp/*
 *.avi
 /a2d/Release/*
 *.png
+*.prototxt
