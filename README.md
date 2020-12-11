@@ -7,7 +7,7 @@ Created by [Brett Fazio](http://linkedin.com/in/brett-fazio/) and [William Chen]
 ![](assets/davis.gif)
 
 ## Overview
-
+Read our paper [here](https://github.com/brettfazio/CVBallTracking/blob/main/assets/Ball_Tracking.pdf).
 ## Requirements 
 
 The libraries to run the code are [cv2](https://pypi.org/project/opencv-python/), [numpy](https://numpy.org/), [pandas](https://pandas.pydata.org/), and [h5py](https://www.h5py.org/) (if trying to run/evaluate on the A2D dataset). 
