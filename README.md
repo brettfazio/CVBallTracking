@@ -69,4 +69,4 @@ python3 main.py --a2d --a2d_amt 5
 
 ## References / Credit
 
-This project builds on the work of eriklindernoren's PyTorch Yolo implementation as a base, specifically the pre-trained model. The repo can be found [here](https://github.com/eriklindernoren/PyTorch-YOLOv3).
+This project builds on the work of eriklindernoren's PyTorch Yolo implementation as a base, specifically the pre-trained model. The repository can be found [here](https://github.com/eriklindernoren/PyTorch-YOLOv3).
